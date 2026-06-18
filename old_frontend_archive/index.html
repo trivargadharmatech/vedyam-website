@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vedyam AI Learning Mode Pipeline & Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- Sidebar Controls -->
+    <aside class="dashboard-sidebar">
+      
+      <div class="logo-section">
+        <div class="logo-icon">V</div>
+        <div class="logo-text">
+          <h2>Vedyam AI</h2>
+          <p>Learning Studio</p>
+        </div>
+      </div>
+
+      <!-- Langflow Download Card -->
+      <div class="pipeline-card">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Langflow Pipeline
+        </h3>
+        <p>This flow is fully serialized for direct import. Download the file, open your local Langflow dashboard, and click 'Upload' to edit/run the pipeline.</p>
+        <button class="btn-primary" id="download-json-btn">
+          Download JSON
+        </button>
+      </div>
+
+      <!-- Pipeline Step Indicators -->
+      <div class="pipeline-steps">
+        <h4>User Journey Flow</h4>
+        
+        <div class="step-indicator active" id="step-ind-1">
+          <div class="step-number">1</div>
+          <span>Topic Selection</span>
+        </div>
+        
+        <div class="step-indicator" id="step-ind-2">
+          <div class="step-number">2</div>
+          <span>Topic Learning Core</span>
+        </div>
+        
+        <div class="step-indicator" id="step-ind-3">
+          <div class="step-number">3</div>
+          <span>Topic-Scoped Quiz</span>
+        </div>
+        
+        <div class="step-indicator" id="step-ind-4">
+          <div class="step-number">4</div>
+          <span>Topic-Scoped Q&A</span>
+        </div>
+        
+        <div class="step-indicator" id="step-ind-5">
+          <div class="step-number">5</div>
+          <span>AI Teacher reflection</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Main Workspace Container -->
+    <main class="simulator-container">
+      
+      <header class="dashboard-header">
+        <div>
+          <h1>Vedyam AI Learning Mode</h1>
+          <p>Design, simulate, and export structured educational workflows powered by Langflow</p>
+        </div>
+        <div class="flow-badge">Version 1.0.0</div>
+      </header>
+
+      <!-- Verification Banner -->
+      <div class="verification-banner animate-on-scroll">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span><strong>Verification:</strong> Modular pipeline structure complies with the requested schemas (Topic, Audio, Video, Quiz templates).</span>
+      </div>
+
+      <!-- Workspace Grid -->
+      <div class="workspace-grid">
+        
+        <!-- COLUMN 1: INTERACTIVE SIMULATOR (APP DEVICE FRAME) -->
+        <section class="simulator-device animate-on-scroll">
+          
+          <div class="device-header">
+            <div class="device-title">
+              <div class="status-dot"></div>
+              <h4 id="current-topic-title">Vedyam Simulator</h4>
+            </div>
+            <div class="device-actions">
+              <button class="action-btn" id="btn-open-qa" title="Ask Topic Q&A">💬 Q&A</button>
+            </div>
+          </div>
+
+          <div class="device-screen">
+            
+            <!-- Mini Audio Player (Drawer at top) -->
+            <div class="mini-audio-player" id="mini-audio-player">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-gold);"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              <div class="audio-info" style="flex-grow:1;">
+                <span id="mini-audio-title" style="font-size:0.8rem; font-weight:600;">Listening...</span>
+              </div>
+              <div class="audio-progress-bar">
+                <div class="audio-progress-fill"></div>
+              </div>
+              <button class="mini-audio-close">✕</button>
+            </div>
+
+            <!-- STEP 1 SCREEN: TOPIC SELECTION -->
+            <div class="sim-screen active" id="topic-select-screen">
+              <h2 style="font-size:1.4rem; margin-bottom:1rem; font-family:'Outfit'">Select a Learning Topic</h2>
+              <p style="color: var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">Select a topic below to generate a guided learning journey led by an AI Teacher.</p>
+              
+              <div class="topics-grid" id="topics-grid">
+                <!-- Topics rendered dynamically by JS -->
+              </div>
+            </div>
+
+            <!-- STEP 2 SCREEN: TOPIC LEARNING SCREEN -->
+            <div class="sim-screen" id="learning-screen">
+              <div class="learning-navigation-header">
+                <div class="back-link">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                  Topics List
+                </div>
+                <h3 class="learning-title" id="learning-topic-title">Birth of Shree Ram</h3>
+              </div>
+
+              <!-- Learning Screen Navigation Tabs -->
+              <nav class="learning-tabs">
+                <button class="tab-btn active" data-tab="explanation">1. Explanation</button>
+                <button class="tab-btn" data-tab="audio">2. Audio Resources</button>
+                <button class="tab-btn" data-tab="video">3. Video Resources</button>
+              </nav>
+
+              <!-- Tab Contents -->
+              <div class="tab-content active" id="explanation-tab">
+                <div id="explanation-content">
+                  <!-- Rendered dynamically by JS -->
+                </div>
+              </div>
+
+              <div class="tab-content" id="audio-tab">
+                <div class="resources-list" id="audios-list">
+                  <!-- Rendered dynamically by JS -->
+                </div>
+              </div>
+
+              <div class="tab-content" id="video-tab">
+                <div class="resources-list" id="videos-list">
+                  <!-- Rendered dynamically by JS -->
+                </div>
+              </div>
+
+              <!-- Footer with Action Buttons -->
+              <footer class="sticky-footer" id="sticky-footer">
+                <button class="action-btn" style="width: auto; padding: 0 1rem;" id="btn-revisit">Revisit Info</button>
+                <button class="btn-primary" style="padding: 0.6rem 1.2rem; font-size: 0.85rem;" onclick="navigateTo('quiz')">
+                  Continue to Quiz
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </footer>
+            </div>
+
+            <!-- STEP 3 SCREEN: QUIZ GENERATION -->
+            <div class="sim-screen" id="quiz-screen">
+              <div class="learning-navigation-header">
+                <div class="back-link">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                  Revisit Study
+                </div>
+                <h3 class="learning-title">Knowledge Check</h3>
+              </div>
+
+              <div class="quiz-container" id="quiz-questions">
+                <!-- Rendered dynamically by JS -->
+              </div>
+
+              <!-- Footer with Submit & Mentorship Trigger -->
+              <footer class="sticky-footer" id="quiz-sticky-footer">
+                <button class="btn-primary" style="width: 100%;" id="btn-quiz-submit">Submit Answers</button>
+                <button class="btn-primary" style="width: 100%; display: none; background: linear-gradient(135deg, var(--accent-emerald), var(--accent-emerald-rgb));" id="btn-teacher-continue">
+                  Enter AI Teacher Room
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </footer>
+            </div>
+
+            <!-- STEP 4 SCREEN: TOPIC-SCOPED Q&A -->
+            <div class="sim-screen" id="qa-screen">
+              <div class="learning-navigation-header">
+                <div class="back-link">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                  Back to Learning
+                </div>
+                <h3 class="learning-title">Topic Q&A Guardrail</h3>
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.75rem;">Test the AI guardrail! Off-topic questions (e.g. general code/cricket) will trigger a reminder to stay on-topic.</p>
+
+              <div class="chat-window">
+                <div class="chat-history" id="qa-history">
+                  <!-- Messages populated by JS -->
+                </div>
+                <div class="chat-input-bar">
+                  <input type="text" id="qa-input" placeholder="Ask a question about this topic...">
+                  <button class="chat-send-btn" id="qa-submit">Send</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 5 SCREEN: FORWARD QUESTIONING ENGINE (AI TEACHER) -->
+            <div class="sim-screen" id="teacher-screen">
+              <div class="learning-navigation-header">
+                <div class="back-link">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                  Back to Quiz
+                </div>
+                <h3 class="learning-title">AI Teacher Room</h3>
+              </div>
+              <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.75rem;">Your mentor asks open-ended questions. Reflect, answer freely, and get constructive guidance.</p>
+
+              <div class="chat-window" style="height: 480px;">
+                <div class="chat-history" id="teacher-history">
+                  <!-- Messages populated by JS -->
+                </div>
+                <div class="chat-input-bar">
+                  <input type="text" id="teacher-input" placeholder="Share your reflections...">
+                  <button class="chat-send-btn" id="teacher-submit" style="background: var(--accent-emerald);">Share</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- COLUMN 2: LANGFLOW PIPELINE BLUEPRINT DIAGRAM -->
+        <section class="flow-diagram-panel animate-on-scroll" style="transition-delay: 0.2s;">
+          <div class="flow-title-row">
+            <h2 style="font-size:1.15rem; color: #fff;">Langflow Backend Blueprint</h2>
+            <div class="flow-badge">Active Engine</div>
+          </div>
+          <p style="font-size:0.85rem; color: var(--text-muted);">This blueprint represents the active nodes being requested in your imported Langflow JSON. Interact with the simulator to see states toggle.</p>
+
+          <div class="flow-canvas">
+            <div class="flow-map-graphic">
+              
+              <!-- Topic Input Node -->
+              <div class="visual-node active-state" id="node-ChatInput-Topic">
+                <div class="node-header">
+                  <span class="node-type">Input Node</span>
+                  <span style="color: var(--accent-emerald);">●</span>
+                </div>
+                <div class="node-title">ChatInput-Topic</div>
+                <div class="node-desc">Captures selected topic name and passes payload.</div>
+                <div class="node-connector"></div>
+              </div>
+
+              <!-- Explanation Generator Node -->
+              <div class="visual-node" id="node-LLM-Explanation">
+                <div class="node-header">
+                  <span class="node-type">LLM Chain</span>
+                  <span style="color: var(--accent-gold);">★</span>
+                </div>
+                <div class="node-title">Explanation Generator</div>
+                <div class="node-desc">Prompts model to draft structure: Intro, Story, Takeaways, Summary.</div>
+                <div class="node-connector"></div>
+              </div>
+
+              <!-- Audio Retrieval Service -->
+              <div class="visual-node" id="node-CustomComponent-AudioRetrieval">
+                <div class="node-header">
+                  <span class="node-type">Custom Component</span>
+                  <span style="color: #6366f1;">⛭</span>
+                </div>
+                <div class="node-title">Audio Retrieval Service</div>
+                <div class="node-desc">Executes vector search or metadata query on audio catalog.</div>
+                <div class="node-connector"></div>
+              </div>
+
+              <!-- Video Retrieval Service -->
+              <div class="visual-node" id="node-CustomComponent-VideoRetrieval">
+                <div class="node-header">
+                  <span class="node-type">Custom Component</span>
+                  <span style="color: #6366f1;">⛭</span>
+                </div>
+                <div class="node-title">Video Retrieval Service</div>
+                <div class="node-desc">Executes vector search or metadata query on video catalog.</div>
+                <div class="node-connector"></div>
+              </div>
+
+              <!-- Quiz Generator Node -->
+              <div class="visual-node" id="node-LLM-Quiz">
+                <div class="node-header">
+                  <span class="node-type">LLM Chain</span>
+                  <span style="color: var(--accent-gold);">★</span>
+                </div>
+                <div class="node-title">AI Quiz Generator</div>
+                <div class="node-desc">Constrains questions to explanation context (MCQ, T/F, Fill-in).</div>
+                <div class="node-connector"></div>
+              </div>
+
+              <!-- Scoped Q&A Guardrail Node -->
+              <div class="visual-node" id="node-LLM-ScopedQA">
+                <div class="node-header">
+                  <span class="node-type">LLM Guardrail</span>
+                  <span style="color: var(--accent-rose);">🛡</span>
+                </div>
+                <div class="node-title">Scoped Q&A Router</div>
+                <div class="node-desc">Filters user queries. Rejects queries outside topic context.</div>
+                <div class="node-connector"></div>
+              </div>
+
+              <!-- Forward Questioning Node -->
+              <div class="visual-node" id="node-LLM-ForwardQuestioning">
+                <div class="node-header">
+                  <span class="node-type">LLM Chat Agent</span>
+                  <span style="color: var(--accent-gold);">★</span>
+                </div>
+                <div class="node-title">AI Teacher Mentorship</div>
+                <div class="node-desc">Guides user with open-ended reflective dialogues.</div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

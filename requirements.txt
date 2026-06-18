@@ -1,0 +1,10 @@
+flask
+flask-cors
+groq
+langchain-community
+faiss-cpu
+sentence-transformers
+rank_bm25
+python-dotenv
+huggingface-hub
+gunicorn
