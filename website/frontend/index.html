@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vedyam — Ancient Wisdom. Modern Life.</title>
+<meta name="description" content="Vedyam turns timeless Indian wisdom into structured, practical learning for modern life.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2c-3 4-5 7-5 11 0 2.8 2.2 5 5 5s5-2.2 5-5c0-4-2-7-5-11z' fill='%23FF9933'/><path d='M4 14a8 8 0 0 0 16 0' stroke='%23FF9933' stroke-width='1.5' fill='none'/><path d='M6 18l1.5-1.5 M18 18l-1.5-1.5 M12 20v2' stroke='%23FF9933' stroke-width='1.5'/></svg>">
+</head>
+<body>
+  <!-- Scroll Progress Indicator -->
+  <div id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Splash Screen -->
+  <div id="splash-screen" role="status" aria-label="Loading Vedyam">
+    <div class="splash-content">
+      <span class="mark splash-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px; color: white;" aria-hidden="true">
+          <path d="M12 2c-3 4-5 7-5 11 0 2.8 2.2 5 5 5s5-2.2 5-5c0-4-2-7-5-11z" fill="white" stroke="none" />
+          <path d="M12 8c-1.5 2.5-2 4-2 5.5 0 1.1.9 2 2 2s2-.9 2-2c0-1.5-.5-3-2-5.5z" fill="#FF9933" stroke="none" />
+          <path d="M4 14a8 8 0 0 0 16 0" />
+          <path d="M6 18l1.5-1.5" />
+          <path d="M18 18l-1.5-1.5" />
+          <path d="M12 20v2" />
+        </svg>
+      </span>
+      <h1 class="splash-text serif">
+        <span style="animation-delay: 0.1s">V</span><span style="animation-delay: 0.2s">e</span><span style="animation-delay: 0.3s">d</span><span style="animation-delay: 0.4s">y</span><span style="animation-delay: 0.5s">a</span><span style="animation-delay: 0.6s">m</span>
+      </h1>
+    </div>
+  </div>
+
+  <header class="nav" id="mainNav">
+    <div class="nav-inner">
+      <a href="#/" class="logo" aria-label="Vedyam Home">
+        <span class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; color: white;">
+            <path d="M12 2c-3 4-5 7-5 11 0 2.8 2.2 5 5 5s5-2.2 5-5c0-4-2-7-5-11z" fill="white" stroke="none" />
+            <path d="M12 8c-1.5 2.5-2 4-2 5.5 0 1.1.9 2 2 2s2-.9 2-2c0-1.5-.5-3-2-5.5z" fill="#FF9933" stroke="none" />
+            <path d="M4 14a8 8 0 0 0 16 0" />
+            <path d="M6 18l1.5-1.5" />
+            <path d="M18 18l-1.5-1.5" />
+            <path d="M12 20v2" />
+          </svg>
+        </span>
+        <b>Vedyam</b>
+      </a>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation"></nav>
+      <div class="nav-right" id="navRight"></div>
+      <!-- Hamburger menu button for mobile -->
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="mobile-drawer" id="mobileDrawer" role="navigation" aria-label="Mobile navigation"></div>
+
+  <main id="app"></main>
+
+  <footer class="footer">
+    <div class="container fi">
+      <a href="#/" class="logo" style="font-size:1.2rem" aria-label="Vedyam Home">
+        <span class="mark" style="width:24px;height:24px;" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px; color: white;">
+            <path d="M12 2c-3 4-5 7-5 11 0 2.8 2.2 5 5 5s5-2.2 5-5c0-4-2-7-5-11z" fill="white" stroke="none" />
+            <path d="M12 8c-1.5 2.5-2 4-2 5.5 0 1.1.9 2 2 2s2-.9 2-2c0-1.5-.5-3-2-5.5z" fill="#FF9933" stroke="none" />
+            <path d="M4 14a8 8 0 0 0 16 0" />
+            <path d="M6 18l1.5-1.5" />
+            <path d="M18 18l-1.5-1.5" />
+            <path d="M12 20v2" />
+          </svg>
+        </span>Vedyam
+      </a>
+      <div>Ancient Wisdom. Modern Life.</div>
+    </div>
+  </footer>
+
+  <!-- Back-to-top button -->
+  <button id="backToTop" aria-label="Back to top">↑</button>
+
+  <div class="toasts" id="toasts" role="alert" aria-live="polite"></div>
+
+  <!-- config first (where the backend lives), then the app -->
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

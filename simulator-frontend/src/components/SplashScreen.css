@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&display=swap');
+
+.splash-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: #050200; /* Very deep warm black */
+  opacity: 1;
+  transition: opacity 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.splash-container.exit {
+  pointer-events: none;
+}
+
+.splash-container.exit .splash-background,
+.splash-container.exit .splash-title,
+.splash-container.exit .halo-glow,
+.splash-container.exit .particles-container {
+  opacity: 0 !important;
+  transition: opacity 0.8s ease;
+}
+
+.splash-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(160, 60, 0, 0.3) 0%, rgba(20, 5, 0, 0.9) 60%, #000000 100%);
+  opacity: 0;
+  animation: bgFadeIn 1s ease-out forwards;
+}
+
+@keyframes bgFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.splash-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.logo-wrapper {
+  position: relative;
+  width: 360px;
+  height: 360px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.halo-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, rgba(255, 140, 0, 0) 70%);
+  filter: blur(25px);
+  opacity: 0;
+  transform: scale(0.5);
+  animation: haloExpand 2.5s cubic-bezier(0.25, 0.1, 0.25, 1) 0.5s forwards,
+             haloPulse 3s ease-in-out 3s infinite alternate;
+}
+
+@keyframes haloExpand {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 0.8; transform: scale(1.2); }
+  100% { opacity: 0.6; transform: scale(1.1); }
+}
+
+@keyframes haloPulse {
+  0% { transform: scale(1.1); opacity: 0.6; }
+  100% { transform: scale(1.25); opacity: 0.8; }
+}
+
+.tilak-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 2;
+  opacity: 0;
+  transform: scale(0.8);
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+  background: transparent !important;
+  animation: logoEntry 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards,
+             logoFloat 4s ease-in-out 2s infinite alternate;
+}
+
+@keyframes logoEntry {
+  0% { opacity: 0; transform: scale(0.8) translateY(20px); filter: drop-shadow(0 0 0px rgba(255, 215, 0, 0)); }
+  100% { opacity: 1; transform: scale(1) translateY(0); filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6)); }
+}
+
+@keyframes logoFloat {
+  0% { transform: scale(1) translateY(0); }
+  100% { transform: scale(1.03) translateY(-6px); filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.8)); }
+}
+
+/* Particles */
+.particles-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 1px;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  background-color: #FFD700;
+  border-radius: 50%;
+  box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.6);
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  animation: particleBurst linear forwards; /* Only play once per cycle but we set it infinite in jsx if needed, currently set to play once but we'll use infinite for ambient effect */
+  animation-iteration-count: infinite;
+}
+
+@keyframes particleBurst {
+  0% { 
+    opacity: 0; 
+    transform: translate(-50%, -50%) scale(0); 
+  }
+  20% { 
+    opacity: 0.8; 
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% { 
+    opacity: 0; 
+    /* Using calc and basic CSS math for the translation */
+    transform: translate(calc(-50% + cos(var(--angle)) * var(--distance)), calc(-50% + sin(var(--angle)) * var(--distance))) scale(1); 
+  }
+}
+
+/* Text */
+.splash-title {
+  font-family: 'Cinzel', serif;
+  font-size: 3.5rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin: 0;
+  
+  /* Golden gradient text */
+  background: linear-gradient(to right, #B8860B, #FFD700, #FFF8DC, #FFD700, #B8860B);
+  background-size: 200% auto;
+  color: #000;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  opacity: 0;
+  transform: translateY(20px);
+  animation: textReveal 1s cubic-bezier(0.25, 0.1, 0.25, 1) 1.2s forwards,
+             textShimmer 3s linear 1.2s infinite;
+  
+  position: relative;
+}
+
+@keyframes textReveal {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes textShimmer {
+  to { background-position: 200% center; }
+}
+
+/* We rely on dynamic JS calculation for the logo-wrapper transform to perfectly land on the target */
+
+@media (max-width: 768px) {
+  .logo-wrapper { width: 220px; height: 220px; }
+  .splash-title { font-size: 2.2rem; }
+}

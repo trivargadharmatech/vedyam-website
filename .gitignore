@@ -22,3 +22,5 @@ vectorstore/
 
 # Databases
 datasets/users.json
+node_modules/  
+ 
