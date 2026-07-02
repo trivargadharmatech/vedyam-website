@@ -20,9 +20,10 @@ A comprehensive spiritual and historical AI teacher platform. This project featu
 
 ### 1. Backend Setup
 
-Navigate to the root directory and install the Python dependencies:
+Navigate to the `backend` directory and install the Python dependencies:
 
 ```bash
+cd backend
 # Optional: Create a virtual environment
 python -m venv venv
 # Activate virtual environment (Windows)
@@ -34,7 +35,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Create a `.env` file in the root directory (or update if exists) and add your Groq API Key:
+Create a `.env` file in the `backend` directory (or update if exists) and add your Groq API Key:
 
 ```env
 GROQ_API_KEY=your_groq_api_key_here
@@ -46,14 +47,14 @@ Run the backend server:
 python backend.py
 ```
 
-The backend will run at `http://localhost:5001`.
+The backend will run at `http://localhost:5001`. For production hosting, you can use `gunicorn backend:app` (as defined in the `Procfile`).
 
 ### 2. Frontend Setup
 
-Open a new terminal and navigate to the `frontend` directory:
+Open a new terminal and navigate to the `simulator-frontend` directory:
 
 ```bash
-cd frontend
+cd simulator-frontend
 
 # Install Node.js dependencies
 npm install
@@ -61,6 +62,13 @@ npm install
 # Start the development server
 npm run dev
 ```
+
+To build for production hosting:
+
+```bash
+npm run build
+```
+This will generate a `dist` folder which can be hosted on platforms like Vercel, Netlify, or AWS S3.
 
 The frontend will be available at `http://localhost:5173`.
 
