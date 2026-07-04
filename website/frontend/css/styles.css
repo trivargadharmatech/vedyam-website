@@ -213,8 +213,8 @@ h1, h2, h3, h4 { color: var(--ink); font-weight: 600; line-height: 1.2; letter-s
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 .nav-inner {
-  max-width: 1080px; margin: 0 auto; padding: 14px 24px;
-  display: flex; align-items: center; gap: 16px;
+  width: 100%; padding: 14px 40px;
+  display: flex; align-items: center; justify-content: space-between; position: relative;
 }
 .logo {
   display: inline-flex; align-items: center; gap: 12px; font-weight: 700;
@@ -232,7 +232,10 @@ h1, h2, h3, h4 { color: var(--ink); font-weight: 600; line-height: 1.2; letter-s
   background: linear-gradient(to right, var(--gold), var(--brand));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-.nav-links { display: flex; gap: 6px; margin-left: 14px; }
+.nav-links { 
+  display: flex; gap: 6px; 
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
 .nav-links a {
   padding: 8px 14px; border-radius: 12px; color: var(--ink-2);
   font-weight: 500; font-size: 0.95rem; transition: all 0.2s;
@@ -251,7 +254,7 @@ h1, h2, h3, h4 { color: var(--ink); font-weight: 600; line-height: 1.2; letter-s
 }
 .nav-links a.active::after { width: 60%; }
 
-.nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
 
 .avatar {
   width: 38px; height: 38px; border-radius: 50%;
@@ -375,6 +378,26 @@ section.block { padding: var(--section-pad) 0; }
   50% { transform: translateY(-15px) translateX(10px); }
   100% { transform: translateY(5px) translateX(-10px); }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   GLOBAL DECORATIONS (SVGs)
+   ═══════════════════════════════════════════════════════════ */
+#global-decorations {
+  position: fixed; inset: 0; pointer-events: none; z-index: -3; overflow: hidden;
+}
+.global-decor-chakra {
+  position: absolute; stroke: var(--brand); pointer-events: none; opacity: 0.08;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 900px; height: 900px;
+  animation: spinChakraGlobal 60s linear infinite;
+}
+
+@keyframes spinChakraGlobal {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+body.light-mode .global-decor-chakra { opacity: 0.08; }
 
 .eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
@@ -849,14 +872,14 @@ section.block { padding: var(--section-pad) 0; }
    ═══════════════════════════════════════════════════════════ */
 .carousel-wrapper { display: flex; justify-content: center; width: 100%; }
 .carousel-container {
-  width: 1008px; max-width: 100%; overflow-x: hidden; overflow-y: hidden; scroll-behavior: auto;
+  width: 100%; max-width: none; overflow-x: hidden; overflow-y: hidden; scroll-behavior: auto;
   padding-bottom: 24px; padding-top: 24px; margin: 10px auto;
   -webkit-overflow-scrolling: touch; scrollbar-width: none; cursor: grab;
 }
 .carousel-container:active { cursor: grabbing; }
 .carousel-container::-webkit-scrollbar { display: none; }
 .carousel-track {
-  display: flex; gap: 24px; width: max-content; padding: 10px 4px;
+  display: flex; gap: 24px; width: max-content; padding: 10px max(24px, calc((100vw - 1080px) / 2 + 24px));
   align-items: stretch; perspective: 1000px;
 }
 .carousel-track .card {

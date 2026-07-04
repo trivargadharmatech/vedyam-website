@@ -375,10 +375,20 @@
      PAGES / VIEWS
      ═══════════════════════════════════════════════════════════════════ */
 
+  window.__quickChat = () => {
+    const input = document.getElementById('quickChatInput');
+    if(input && input.value.trim()) {
+      window.location.href = `${cfg.CHATBOT_URL || '#/'}?from=website&query=${encodeURIComponent(input.value.trim())}`;
+    } else {
+      window.location.href = `${cfg.CHATBOT_URL || '#/'}?from=website`;
+    }
+  };
+
   /* ─── HOME ─── */
   function pageHome() {
     return `
     <section class="hero">
+
       <div class="container">
         <div class="eyebrow stagger-up" style="animation-delay:0.1s">
           <span>🔥</span> <span>Wisdom Rediscovered</span>
@@ -393,6 +403,24 @@
           <a href="#/courses" class="btn primary glow"><span class="btn-label">Explore Courses</span></a>
           <a href="${cfg.SIMULATOR_URL || '#/'}" class="btn ghost" target="_blank" rel="noopener"><span class="btn-label">Try Learning Mode ↗</span></a>
         </div>
+        
+        <div class="quick-chat-bar stagger-up" style="animation-delay:0.6s; max-width:800px; margin: 40px auto 0; background:rgba(255, 255, 255, 0.03); border:1px solid rgba(255, 255, 255, 0.1); border-radius:12px; padding:16px; display:flex; align-items:center; gap:16px; box-shadow:0 8px 32px rgba(0, 0, 0, 0.2); backdrop-filter:blur(10px);">
+          <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
+            <div style="color:var(--gold);">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
+            </div>
+            <div style="text-align:left;">
+              <h3 style="font-size:1.1rem; margin-bottom:0; color:var(--ink);">Ask ShastraBot</h3>
+              <p style="color:var(--ink-2); font-size:0.8rem; margin:0;">Get instant answers from ancient wisdom</p>
+            </div>
+          </div>
+          <div style="flex:1; position:relative; display:flex; align-items:center;">
+            <input type="text" id="quickChatInput" placeholder="e.g., What is the true meaning of Dharma?" style="width:100%; background:rgba(255, 255, 255, 0.05); border:1px solid rgba(255, 255, 255, 0.1); border-radius:99px; padding:0.85rem 3.5rem 0.85rem 1.5rem; font-size:0.95rem; color:var(--ink); outline:none;" onkeydown="if(event.key==='Enter') window.__quickChat()">
+            <button onclick="window.__quickChat()" style="position:absolute; right:6px; background:var(--gold); border:none; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#000; transition: transform 0.2s ease;">
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -402,9 +430,9 @@
           <div><h2>Featured Paths</h2><p>Curated journeys into ancient wisdom</p></div>
           <a href="#/courses" class="btn sm ghost"><span class="btn-label">View All</span></a>
         </div>
-        <div class="carousel-wrapper">
-          <div class="carousel-container" id="homeCarousel"></div>
-        </div>
+      </div>
+      <div class="carousel-wrapper" style="margin-top: 16px;">
+        <div class="carousel-container" id="homeCarousel"></div>
       </div>
     </section>
 
@@ -435,7 +463,7 @@
                 <span id="chatModeLabel">Learn Mode</span>
                 <div class="switch ${state.chatMode === 'teach' ? 'on' : ''}" id="chatSwitch" role="switch" aria-checked="${state.chatMode === 'teach'}" tabindex="0"></div>
               </div>
-              <a href="${cfg.SIMULATOR_URL || '#/'}?from=website" target="_blank" rel="noopener" class="btn sm primary"><span class="btn-label">Open Full Chatbot ↗</span></a>
+              <a href="${cfg.CHATBOT_URL || '#/'}?from=website" class="btn sm primary"><span class="btn-label">Open Full Chatbot ↗</span></a>
             </div>
           </div>
           <div class="chat-body" id="chatBody">
@@ -635,6 +663,10 @@
       cancelAnimationFrame(state.carouselScrollId);
       state.carouselScrollId = null;
     }
+    if (state.placeholderInterval) {
+      clearTimeout(state.placeholderInterval);
+      state.placeholderInterval = null;
+    }
 
     const hash = (location.hash || '#/').slice(1);
     const app = el('app');
@@ -687,8 +719,61 @@
      AFTER-RENDER HOOKS
      ═══════════════════════════════════════════════════════════════════ */
 
+  /* ─── Typing Animation for Quick Chat ─── */
+  function initPlaceholderAnimation() {
+    const input = document.getElementById('quickChatInput');
+    if (!input) return;
+
+    const suggestions = [
+      "What is the true meaning of Dharma?",
+      "Tell me about Karma",
+      "Who is Lord Krishna?",
+      "Explain the concept of Moksha",
+      "What are the four Vedas?"
+    ];
+
+    let currentIdx = 0;
+    let charIdx = 0;
+    let isDeleting = false;
+    let typingSpeed = 100;
+    
+    if (state.placeholderInterval) clearTimeout(state.placeholderInterval);
+
+    function type() {
+      if(!document.getElementById('quickChatInput')) return;
+      
+      const currentText = suggestions[currentIdx];
+      
+      if (isDeleting) {
+        input.placeholder = "e.g., " + currentText.substring(0, charIdx - 1);
+        charIdx--;
+        typingSpeed = 30; // Delete faster
+      } else {
+        input.placeholder = "e.g., " + currentText.substring(0, charIdx + 1);
+        charIdx++;
+        typingSpeed = 70; // Type normally
+      }
+
+      if (!isDeleting && charIdx === currentText.length) {
+        typingSpeed = 2500; // Pause at the end
+        isDeleting = true;
+      } else if (isDeleting && charIdx === 0) {
+        isDeleting = false;
+        currentIdx = (currentIdx + 1) % suggestions.length;
+        typingSpeed = 500; // Pause before typing next
+      }
+
+      state.placeholderInterval = setTimeout(type, typingSpeed);
+    }
+    
+    // Start animation slightly after load
+    state.placeholderInterval = setTimeout(type, 1500);
+  }
+
   /* ─── After Home ─── */
   async function afterHome() {
+    initPlaceholderAnimation();
+
     // Stats counter observer
     const statsEl = el('statsStrip');
     if (statsEl) counterObserver.observe(statsEl);
@@ -964,18 +1049,19 @@
     setButtonLoading(btn, true);
 
     try {
-      const data = await api('/api/chat', {
+      const res = await fetch('http://127.0.0.1:5001/api/chat', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: msg,
-          teach_mode: state.chatMode === 'teach',
-          history: state.chat.slice(0, -1).map(m => ({ role: m.role, text: m.text }))
+          history: state.chat.slice(0, -1).map(m => ({ role: m.role, content: m.text }))
         }),
       });
+      const data = await res.json();
       state.chat.push({ role: 'bot', text: data.reply || 'No response received.' });
 
-      // If in "learn" mode and we got a full-response link, show it
-      if (state.chatMode === 'learn' && state.chat.length >= 4) {
+      const userQueries = state.chat.filter(m => m.role === 'user').length;
+      if (!window.__continueChatInTab && userQueries >= 3) {
         const chatBox = el('chatBox');
         const existing = chatBox?.querySelector('.chat-popup-overlay');
         if (!existing) {
@@ -985,9 +1071,9 @@
             <div class="chat-popup-content">
               <p style="font-size:2.5rem; margin-bottom:12px">🕉️</p>
               <h3 style="margin-bottom:8px">Dive Deeper with ShastraBot</h3>
-              <p style="color:var(--ink-2); margin-bottom:20px; max-width:300px">Continue this conversation in our full AI chatbot experience.</p>
-              <a href="${cfg.CHATBOT_URL || '#/'}?from=website&query=${encodeURIComponent(msg)}&history=${encodeURIComponent(JSON.stringify(state.chat))}" class="btn primary" target="_blank" rel="noopener"><span class="btn-label">Open ShastraBot ↗</span></a>
-              <button class="btn ghost sm" style="margin-top:12px" onclick="this.closest('.chat-popup-overlay').remove()"><span class="btn-label">Continue Here</span></button>
+              <p style="color:var(--ink-2); margin-bottom:20px; max-width:300px">You've asked a few questions. Do you want to continue in the full immersive chatbot experience?</p>
+              <a href="${cfg.CHATBOT_URL || '#/'}?from=website&query=${encodeURIComponent(msg)}&history=${encodeURIComponent(JSON.stringify(state.chat))}" class="btn primary"><span class="btn-label">Open Full Chatbot ↗</span></a>
+              <button class="btn ghost sm" style="margin-top:12px" onclick="this.closest('.chat-popup-overlay').remove(); window.__continueChatInTab = true;"><span class="btn-label">Continue Here</span></button>
             </div>`;
           chatBox?.appendChild(popup);
         }
