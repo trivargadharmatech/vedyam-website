@@ -1049,7 +1049,7 @@
     setButtonLoading(btn, true);
 
     try {
-      const res = await fetch('http://127.0.0.1:5001/api/chat', {
+      const res = await fetch(cfg.API_BASE + '/api/website/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

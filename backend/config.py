@@ -4,7 +4,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BASE_DIR.parent
-FRONTEND_DIR = PROJECT_DIR / "frontend"
+FRONTEND_DIR = PROJECT_DIR / "website" / "frontend"
 
 # --- Core ---
 DB_PATH = os.environ.get("VEDYAM_DB", str(BASE_DIR / "vedyam.db"))

@@ -24,3 +24,8 @@ vectorstore/
 datasets/users.json
 node_modules/  
  
+# Additional ignores
+*.db
+*.sqlite
+backend/vedyam-learning-pipeline.json
+dist/

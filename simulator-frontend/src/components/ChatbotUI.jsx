@@ -150,7 +150,7 @@ function ChatbotUI() {
     setIsChatLoading(true);
 
     try {
-      const response = await fetch('/api/chat_stream', {
+      const response = await fetch('/api/simulator/chat_stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, history: newMessages }),
@@ -259,7 +259,7 @@ function ChatbotUI() {
     setIsChatLoading(true);
 
     try {
-      const response = await fetch('/api/chat_stream', {
+      const response = await fetch('/api/simulator/chat_stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, history: newMessages }),

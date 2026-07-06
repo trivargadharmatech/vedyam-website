@@ -9,8 +9,7 @@ from dotenv import load_dotenv
 from groq import Groq
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 
 # Constants and Configuration
 BOT_NAME = "ShastraBot"
@@ -50,32 +49,7 @@ if not API_KEY:
 # Initialize Groq client
 client = Groq(api_key=API_KEY)
 
-if not os.path.exists(VECTORSTORE_DIR):
-    _cache_loaded = False
-    try:
-        from huggingface_hub import hf_hub_download, list_repo_files as _lrf
-        import shutil
-        print("Checking for cached vectorstore...")
-        _repo_files = list(_lrf("vijayyh/shastrabot-data", repo_type="dataset"))
-        _vs_files = [f for f in _repo_files if f.startswith("vectorstore_cache/")]
 
-        if _vs_files:
-            os.makedirs(VECTORSTORE_DIR, exist_ok=True)
-            for _vf in _vs_files:
-                _src = hf_hub_download(
-                    "vijayyh/shastrabot-data", _vf, repo_type="dataset"
-                )
-                _dest = _vf.replace("vectorstore_cache/", f"{VECTORSTORE_DIR}/")
-                shutil.copy(_src, _dest)
-            print("Vectorstore loaded from cache — skipping ingest")
-            _cache_loaded = True
-    except Exception as e:
-        print(f"Cache download failed: {e}")
-
-    if not _cache_loaded:
-        print("No cache — running full ingest...")
-        import ingest
-        ingest.main()
 
 def is_mindmap_query(query: str) -> bool:
     keywords = ["mindmap", "mind map", "outline", "tree", "structure", "map"]
@@ -221,19 +195,15 @@ class Chatbot:
 
     def __init__(self):
         """Initializes the Chatbot, loading models and vector store."""
-        logging.info("Initializing Chatbot...")
+        logging.info("Initializing Chatbot with HF Inference API...")
         try:
-            import torch
-            device = "cuda" if torch.cuda.is_available() else "cpu"
-            logging.info(f"Using device for Chatbot embeddings: {device}")
-            self.embeddings = HuggingFaceEmbeddings(
-                model_name=EMBEDDING_MODEL,
-                model_kwargs={"device": device}
-            )
-            vectorstore = FAISS.load_local(
-                VECTORSTORE_DIR,
-                self.embeddings,
-                allow_dangerous_deserialization=True
+            hf_token = os.getenv("HF_TOKEN")
+            if not hf_token:
+                logging.warning("HF_TOKEN not found! Inference API will fail.")
+                
+            self.embeddings = HuggingFaceInferenceAPIEmbeddings(
+                api_key=hf_token,
+                model_name=EMBEDDING_MODEL
             )
 
             self.DOMAIN_CONCEPT = """
@@ -241,25 +211,71 @@ class Chatbot:
             Vedas, Upanishads, dharma, karma, yoga, moksha,
             Krishna, Rama, Arjuna, spiritual philosophy
             """
-
             self.domain_vector = self.embeddings.embed_query(self.DOMAIN_CONCEPT)
 
-            self.retriever = vectorstore.as_retriever(search_kwargs={"k": RETRIEVER_SEARCH_K})
-            # Build BM25 keyword index for hybrid retrieval
-            self.docs = list(vectorstore.docstore._dict.values())
-            self.tokenized_docs = [
-            doc.page_content.lower().split() for doc in self.docs]
-            self.bm25 = BM25Okapi(self.tokenized_docs)
-            # Cross-encoder re-ranker
-            from sentence_transformers import CrossEncoder
-            self.reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+            # Build BM25 keyword index from PostgreSQL
+            from langchain_core.documents import Document
+            db_url = os.environ.get("DATABASE_URL")
+            self.docs = []
+            if db_url:
+                import psycopg2
+                try:
+                    conn = psycopg2.connect(db_url)
+                    cur = conn.cursor()
+                    cur.execute("SELECT content, metadata FROM document_chunks")
+                    for row in cur.fetchall():
+                        self.docs.append(Document(page_content=row[0], metadata=row[1]))
+                    conn.close()
+                except Exception as e:
+                    logging.error(f"Failed to load docs from DB for BM25: {e}")
+            else:
+                try:
+                    from langchain_community.vectorstores import FAISS
+                    vectorstore = FAISS.load_local(
+                        VECTORSTORE_DIR,
+                        self.embeddings,
+                        allow_dangerous_deserialization=True
+                    )
+                    self.docs = list(vectorstore.docstore._dict.values())
+                    self.faiss_vs = vectorstore
+                    logging.info("Loaded docs from FAISS vectorstore.")
+                except Exception as e:
+                    logging.error(f"Failed to load docs from FAISS: {e}")
+                    
+            if self.docs:
+                self.tokenized_docs = [doc.page_content.lower().split() for doc in self.docs]
+                self.bm25 = BM25Okapi(self.tokenized_docs)
+            else:
+                self.bm25 = None
+
+            # Cross-encoder wrapper using Inference API
+            class RemoteCrossEncoder:
+                def __init__(self, token):
+                    self.api_url = "https://api-inference.huggingface.co/models/cross-encoder/ms-marco-MiniLM-L-6-v2"
+                    self.headers = {"Authorization": f"Bearer {token}"}
+                def predict(self, pairs):
+                    import requests
+                    scores = []
+                    for query, text in pairs:
+                        try:
+                            # HF cross-encoder api format
+                            res = requests.post(self.api_url, headers=self.headers, json={"inputs": {"source_sentence": query, "sentences": [text]}})
+                            if res.status_code == 200:
+                                val = res.json()
+                                if isinstance(val, list) and len(val) > 0:
+                                    scores.append(val[0])
+                                else:
+                                    scores.append(0.0)
+                            else:
+                                scores.append(0.0)
+                        except:
+                            scores.append(0.0)
+                    return scores
+
+            self.reranker = RemoteCrossEncoder(hf_token)
             self.client = client
             self.chat_history = []
-
             self.last_entity = None
-            
-
-            
             logging.info("Chatbot initialized successfully.")
         except Exception as e:
             logging.error(f"Chatbot initialization failed: {e}")
@@ -357,6 +373,9 @@ class Chatbot:
         """
         BM25 keyword search for hybrid retrieval.
         """
+        if not self.bm25:
+            return []
+            
         tokens = query.lower().split()
         scores = self.bm25.get_scores(tokens)
 
@@ -392,6 +411,31 @@ class Chatbot:
             return docs[:top_k]
 
 
+    def _pg_retrieve(self, query_text: str):
+        db_url = os.environ.get("DATABASE_URL")
+        if not db_url:
+            logging.info("DATABASE_URL missing. Retrieving from FAISS instead.")
+            if hasattr(self, 'faiss_vs'):
+                return self.faiss_vs.similarity_search(query_text, k=RETRIEVER_SEARCH_K)
+            return []
+        try:
+            import psycopg2
+            import json
+            from langchain_core.documents import Document
+            pg_conn = psycopg2.connect(db_url)
+            pg_cur = pg_conn.cursor()
+            q_emb = self.embeddings.embed_query(query_text)
+            pg_cur.execute(
+                "SELECT content, metadata FROM document_chunks ORDER BY embedding <=> %s::vector LIMIT %s",
+                (q_emb, RETRIEVER_SEARCH_K)
+            )
+            pg_results = pg_cur.fetchall()
+            pg_conn.close()
+            return [Document(page_content=row[0], metadata=row[1]) for row in pg_results]
+        except Exception as e:
+            logging.error(f"pgvector retrieval failed: {e}")
+            return []
+
     def _retrieve_docs(self, query: str):
         """
         Retrieves documents from the vector store, with optional query expansion.
@@ -399,8 +443,8 @@ class Chatbot:
         normalized_query = normalize_query(query)
         logging.info(f"Normalized query: {normalized_query}")
 
-        # 1. Initial Retrieval
-        initial_docs = self.retriever.invoke(normalized_query)
+        # 1. Initial Retrieval (pgvector)
+        initial_docs = self._pg_retrieve(normalized_query)
         
         # 2. Trigger Conditions for Query Expansion
         expand_query = (len(normalized_query.split()) <= QUERY_EXPANSION_WORD_THRESHOLD and 
@@ -410,15 +454,11 @@ class Chatbot:
         keyword_docs = self._keyword_search(normalized_query)
         all_docs = initial_docs + keyword_docs
 
-        
         if expand_query:
             logging.info(f"Query expansion triggered for query: '{query}'")
             expanded_queries = self._get_expanded_queries(normalized_query)
             for eq in expanded_queries:
-                try:
-                    all_docs.extend(self.retriever.invoke(eq))
-                except Exception as e:
-                    logging.error(f"Retrieval error for expanded query '{eq}': {e}")
+                all_docs.extend(self._pg_retrieve(eq))
 
         # 3. Deduplicate Documents
         unique_docs = {}
