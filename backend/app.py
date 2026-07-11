@@ -32,7 +32,7 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 print("Initializing Simulator AI components...")
 try:
-    if os.getenv("DATABASE_URL") and os.getenv("HF_TOKEN"):
+    if os.getenv("DATABASE_URL"):
         print("Production mode: Using SimulatorChatbotLogic (Inference API).")
         sim_chatbot_logic = SimulatorChatbotLogic()
         hf_chatbot = sim_chatbot_logic
