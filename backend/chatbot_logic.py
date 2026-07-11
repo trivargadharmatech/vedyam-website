@@ -213,21 +213,34 @@ class Chatbot:
             """
             self.domain_vector = None # Evaluated lazily to prevent startup crashes
 
-            # Build BM25 keyword index from local FAISS store
+            # Build BM25 keyword index from PostgreSQL
             from langchain_core.documents import Document
+            db_url = os.environ.get("DATABASE_URL")
             self.docs = []
-            try:
-                from langchain_community.vectorstores import FAISS
-                vectorstore = FAISS.load_local(
-                    VECTORSTORE_DIR,
-                    self.embeddings,
-                    allow_dangerous_deserialization=True
-                )
-                self.docs = list(vectorstore.docstore._dict.values())
-                self.faiss_vs = vectorstore
-                logging.info("Loaded docs from FAISS vectorstore.")
-            except Exception as e:
-                logging.error(f"Failed to load docs from FAISS: {e}")
+            if db_url:
+                import psycopg2
+                try:
+                    conn = psycopg2.connect(db_url)
+                    cur = conn.cursor()
+                    cur.execute("SELECT content, metadata FROM document_chunks")
+                    for row in cur.fetchall():
+                        self.docs.append(Document(page_content=row[0], metadata=row[1]))
+                    conn.close()
+                except Exception as e:
+                    logging.error(f"Failed to load docs from DB for BM25: {e}")
+            else:
+                try:
+                    from langchain_community.vectorstores import FAISS
+                    vectorstore = FAISS.load_local(
+                        VECTORSTORE_DIR,
+                        self.embeddings,
+                        allow_dangerous_deserialization=True
+                    )
+                    self.docs = list(vectorstore.docstore._dict.values())
+                    self.faiss_vs = vectorstore
+                    logging.info("Loaded docs from FAISS vectorstore.")
+                except Exception as e:
+                    logging.error(f"Failed to load docs from FAISS: {e}")
                     
             if self.docs:
                 self.tokenized_docs = [doc.page_content.lower().split() for doc in self.docs]
@@ -399,10 +412,29 @@ class Chatbot:
 
 
     def _pg_retrieve(self, query_text: str):
-        # Force retrieve from FAISS since Postgres vector table is unseeded
-        if hasattr(self, 'faiss_vs'):
-            return self.faiss_vs.similarity_search(query_text, k=RETRIEVER_SEARCH_K)
-        return []
+        db_url = os.environ.get("DATABASE_URL")
+        if not db_url:
+            logging.info("DATABASE_URL missing. Retrieving from FAISS instead.")
+            if hasattr(self, 'faiss_vs'):
+                return self.faiss_vs.similarity_search(query_text, k=RETRIEVER_SEARCH_K)
+            return []
+        try:
+            import psycopg2
+            import json
+            from langchain_core.documents import Document
+            pg_conn = psycopg2.connect(db_url)
+            pg_cur = pg_conn.cursor()
+            q_emb = self.embeddings.embed_query(query_text)
+            pg_cur.execute(
+                "SELECT content, metadata FROM document_chunks ORDER BY embedding <=> %s::vector LIMIT %s",
+                (q_emb, RETRIEVER_SEARCH_K)
+            )
+            pg_results = pg_cur.fetchall()
+            pg_conn.close()
+            return [Document(page_content=row[0], metadata=row[1]) for row in pg_results]
+        except Exception as e:
+            logging.error(f"pgvector retrieval failed: {e}")
+            return []
 
     def _retrieve_docs(self, query: str):
         """
