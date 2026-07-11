@@ -1049,7 +1049,7 @@
     setButtonLoading(btn, true);
 
     try {
-      const chatApiBase = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? cfg.API_BASE : "https://vijayyh-vedyamchatbot1-0-0.hf.space";
+      const chatApiBase = cfg.API_BASE;
       const res = await fetch(chatApiBase + '/api/website/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
