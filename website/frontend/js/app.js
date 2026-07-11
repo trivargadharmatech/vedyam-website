@@ -463,7 +463,7 @@
                 <span id="chatModeLabel">Learn Mode</span>
                 <div class="switch ${state.chatMode === 'teach' ? 'on' : ''}" id="chatSwitch" role="switch" aria-checked="${state.chatMode === 'teach'}" tabindex="0"></div>
               </div>
-              <button onclick="window.__openFullChatbot()" class="btn sm primary"><span class="btn-label">Open Full Chatbot ↗</span></button>
+              <a href="${cfg.CHATBOT_URL || '#/'}?from=website" class="btn sm primary"><span class="btn-label">Open Full Chatbot ↗</span></a>
             </div>
           </div>
           <div class="chat-body" id="chatBody">
@@ -1073,7 +1073,7 @@
               <p style="font-size:2.5rem; margin-bottom:12px">🕉️</p>
               <h3 style="margin-bottom:8px">Dive Deeper with ShastraBot</h3>
               <p style="color:var(--ink-2); margin-bottom:20px; max-width:300px">You've asked a few questions. Do you want to continue in the full immersive chatbot experience?</p>
-              <button onclick="window.__openFullChatbot('&query=${encodeURIComponent(msg)}&history=${encodeURIComponent(JSON.stringify(state.chat))}')" class="btn primary"><span class="btn-label">Open Full Chatbot ↗</span></button>
+              <a href="${cfg.CHATBOT_URL || '#/'}?from=website&query=${encodeURIComponent(msg)}&history=${encodeURIComponent(JSON.stringify(state.chat))}" class="btn primary"><span class="btn-label">Open Full Chatbot ↗</span></a>
               <button class="btn ghost sm" style="margin-top:12px" onclick="this.closest('.chat-popup-overlay').remove(); window.__continueChatInTab = true;"><span class="btn-label">Continue Here</span></button>
             </div>`;
           chatBox?.appendChild(popup);
@@ -1268,68 +1268,4 @@
       e.target.click();
     }
   });
-
-  // Expose global openFullChatbot for the modal
-  window.__openFullChatbot = function(queryStr = '') {
-    let modal = document.getElementById('chatbotModal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'chatbotModal';
-      modal.style.position = 'fixed';
-      modal.style.top = '0';
-      modal.style.left = '0';
-      modal.style.width = '100vw';
-      modal.style.height = '100vh';
-      modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
-      modal.style.zIndex = '9999';
-      modal.style.display = 'flex';
-      modal.style.justifyContent = 'center';
-      modal.style.alignItems = 'center';
-      modal.style.backdropFilter = 'blur(10px)';
-      modal.style.padding = '24px';
-      modal.style.boxSizing = 'border-box';
-      modal.style.opacity = '0';
-      modal.style.transition = 'opacity 0.3s ease';
-      
-      const closeBtn = document.createElement('button');
-      closeBtn.innerHTML = '✕';
-      closeBtn.style.position = 'absolute';
-      closeBtn.style.top = '24px';
-      closeBtn.style.right = '24px';
-      closeBtn.style.background = 'rgba(255,255,255,0.1)';
-      closeBtn.style.border = '1px solid rgba(255,255,255,0.2)';
-      closeBtn.style.color = 'white';
-      closeBtn.style.fontSize = '24px';
-      closeBtn.style.width = '48px';
-      closeBtn.style.height = '48px';
-      closeBtn.style.borderRadius = '50%';
-      closeBtn.style.cursor = 'pointer';
-      closeBtn.style.zIndex = '10000';
-      closeBtn.style.display = 'flex';
-      closeBtn.style.justifyContent = 'center';
-      closeBtn.style.alignItems = 'center';
-      closeBtn.onclick = () => {
-        modal.style.opacity = '0';
-        setTimeout(() => document.body.removeChild(modal), 300);
-      };
-      
-      const iframe = document.createElement('iframe');
-      iframe.src = (window.VEDYAM.CHATBOT_URL || '/chatbot') + '?from=website' + queryStr;
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.maxWidth = '1200px';
-      iframe.style.borderRadius = '16px';
-      iframe.style.border = '1px solid rgba(255,255,255,0.1)';
-      iframe.style.boxShadow = '0 24px 64px rgba(0,0,0,0.5)';
-      iframe.style.background = '#111';
-      
-      modal.appendChild(closeBtn);
-      modal.appendChild(iframe);
-      document.body.appendChild(modal);
-      
-      requestAnimationFrame(() => {
-        modal.style.opacity = '1';
-      });
-    }
-  };
 })();
