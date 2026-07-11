@@ -211,7 +211,7 @@ class Chatbot:
             Vedas, Upanishads, dharma, karma, yoga, moksha,
             Krishna, Rama, Arjuna, spiritual philosophy
             """
-            self.domain_vector = self.embeddings.embed_query(self.DOMAIN_CONCEPT)
+            self.domain_vector = None # Evaluated lazily to prevent startup crashes
 
             # Build BM25 keyword index from PostgreSQL
             from langchain_core.documents import Document
@@ -613,6 +613,13 @@ class Chatbot:
             query_vector = self.embeddings.embed_query(query)
 
             # cosine similarity (dot product since vectors are normalized)
+            if self.domain_vector is None:
+                try:
+                    self.domain_vector = self.embeddings.embed_query(self.DOMAIN_CONCEPT)
+                except Exception as e:
+                    logging.error(f"Failed to compute domain_vector: {e}")
+                    return query
+                    
             similarity = sum(q * d for q, d in zip(query_vector, self.domain_vector))
 
             OFF_TOPIC_SIGNALS = ["modi", "trump", "hitler", "stock", "weather", "cricket", "football" ]
