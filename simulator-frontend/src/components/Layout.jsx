@@ -47,7 +47,7 @@ const Layout = ({ children, user, onLogout }) => {
               <span className="logo-text">Vedyam<span style={{color: 'var(--accent-gold)'}}>AI</span></span>
             </Link>
             <nav className="header-nav">
-              <a href="http://127.0.0.1:8000/" className="nav-link" style={{display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-gold)'}}>
+              <a href={window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? "http://127.0.0.1:8000/" : "https://vedyam.org/"} className="nav-link" style={{display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--accent-gold)'}}>
                 <ArrowLeft size={16} /> Back to Website
               </a>
               <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} end>Simulator</NavLink>

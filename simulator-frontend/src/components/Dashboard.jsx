@@ -1,3 +1,4 @@
+import { getApiBase } from '../api';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, ArrowLeft, Play, LayoutDashboard, ChevronLeft, Menu, Send, Sparkles } from 'lucide-react';
@@ -41,7 +42,7 @@ const Dashboard = ({ user }) => {
     setLoading(true);
     
     try {
-      const res = await fetch('/api/explain', {
+      const res = await fetch(getApiBase() + '/api/explain', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic: topic.title })
@@ -76,7 +77,7 @@ const Dashboard = ({ user }) => {
         setExplanation('Failed to generate explanation. Data format unrecognized.');
       }
 
-      const rRes = await fetch('/api/media', {
+      const rRes = await fetch(getApiBase() + '/api/media', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic: topic.title })
@@ -100,7 +101,7 @@ const Dashboard = ({ user }) => {
     setQuizSubmitted(false);
     setQuizScore(0);
     try {
-      const res = await fetch('/api/quiz', {
+      const res = await fetch(getApiBase() + '/api/quiz', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic: currentTopic.title })
@@ -123,7 +124,7 @@ const Dashboard = ({ user }) => {
     setQaLoading(true);
 
     try {
-      const res = await fetch('/api/qa', {
+      const res = await fetch(getApiBase() + '/api/qa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic: currentTopic.title, question: q })

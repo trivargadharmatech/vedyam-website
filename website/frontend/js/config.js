@@ -7,22 +7,24 @@
  *
  * The frontend REQUIRES a running backend. There is no offline mode.
  */
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
 window.VEDYAM = {
   // Base URL of the Vedyam backend API.
   //   ""                       -> same origin that served this page
   //                               (use this when the backend also serves the frontend)
   //   "http://127.0.0.1:8000"  -> backend running separately on your machine
   //   "https://api.vedyam.org" -> a deployed backend
-  API_BASE: "",
+  API_BASE: isLocal ? "" : "https://vijayyh-vedyamchatbot1-0-0.hf.space",
 
   // URL of the ShastraBot chatbot (simulator backend).
   // Used when redirecting users to the full chatbot experience.
-  CHATBOT_URL: "http://localhost:5173/chatbot",
+  CHATBOT_URL: isLocal ? "http://localhost:5173/chatbot" : "/chatbot",
 
   // URL of the simulator frontend.
   // Used for "Try Learning Mode" and other simulator links.
-  SIMULATOR_URL: "http://localhost:5173",
+  SIMULATOR_URL: isLocal ? "http://localhost:5173" : "/",
 
   // URL of this website itself (used for back-links from the simulator).
-  WEBSITE_URL: "http://127.0.0.1:8000",
+  WEBSITE_URL: isLocal ? "http://127.0.0.1:8000" : "https://vedyam.org",
 };

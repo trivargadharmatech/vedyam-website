@@ -1,3 +1,4 @@
+import { getApiBase } from '../api';
 import React, { useState, useEffect } from 'react';
 import { BookOpen, Key, User, ArrowRight, Sparkles } from 'lucide-react';
 import ChariotScene from './ChariotScene';
@@ -44,7 +45,7 @@ const Login = ({ onLogin }) => {
           onLogin(data);
         } else {
           // Auto-login after register
-          const loginRes = await fetch('/api/login', {
+          const loginRes = await fetch(getApiBase() + '/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })

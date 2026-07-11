@@ -1,8 +1,10 @@
+import { getApiBase } from '../api';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Sun, Moon, Send, Compass, MessageSquare, RotateCcw, Plus, User, Menu, PanelLeft, Copy, Check, Trash2, ArrowLeft } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SplashScreen from './SplashScreen';
 import tilakLogoImg from '../assets/tilak.png';
+import { getApiBase } from '../api';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import './ChatbotUI.css';
@@ -150,7 +152,7 @@ function ChatbotUI() {
     setIsChatLoading(true);
 
     try {
-      const response = await fetch('/api/simulator/chat_stream', {
+      const response = await fetch(getApiBase() + '/api/simulator/chat_stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, history: newMessages }),
@@ -259,7 +261,7 @@ function ChatbotUI() {
     setIsChatLoading(true);
 
     try {
-      const response = await fetch('/api/simulator/chat_stream', {
+      const response = await fetch(getApiBase() + '/api/simulator/chat_stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, history: newMessages }),
@@ -375,7 +377,7 @@ function ChatbotUI() {
     setExplorePath(newPath);
 
     try {
-      const response = await fetch('/api/explore_stream', {
+      const response = await fetch(getApiBase() + '/api/explore_stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic: topicToExplore, path: explorePath }),
@@ -517,7 +519,7 @@ function ChatbotUI() {
         {/* Mobile Header */}
         <div className="mobile-header">
           {isFromWebsite ? (
-            <a href="http://127.0.0.1:8000" className="icon-btn" title="Back to Main Website">
+            <a href={window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? "http://127.0.0.1:8000/" : "https://vedyam.org/"} className="icon-btn" title="Back to Main Website">
               <ArrowLeft size={24} />
             </a>
           ) : (
@@ -552,7 +554,7 @@ function ChatbotUI() {
               </button>
             </div>
             {isFromWebsite ? (
-              <a href="http://127.0.0.1:8000" className="nav-btn" style={{ textDecoration: 'none', padding: '8px 12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '0.85rem' }}>
+              <a href={window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? "http://127.0.0.1:8000/" : "https://vedyam.org/"} className="nav-btn" style={{ textDecoration: 'none', padding: '8px 12px', background: 'rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '0.85rem' }}>
                 <ArrowLeft size={16} /> Back to Main Website
               </a>
             ) : (
