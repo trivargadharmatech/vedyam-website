@@ -13,7 +13,7 @@ from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 
 # Constants and Configuration
 BOT_NAME = "ShastraBot"
-VECTORSTORE_DIR = "vectorstore"
+VECTORSTORE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vectorstore")
 EMBEDDING_MODEL = "BAAI/bge-base-en-v1.5"
 LLM_MODEL = "llama-3.3-70b-versatile"
 
