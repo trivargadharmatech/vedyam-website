@@ -8,6 +8,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'backend'))
 
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from dotenv import load_dotenv
+
+# Load environment variables from backend/.env
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', 'backend', '.env'))
 
 def main():
     db_url = os.environ.get("DATABASE_URL")
@@ -98,8 +102,8 @@ def main():
             vector = index.reconstruct(internal_idx).tolist()
             
             source = doc.metadata.get("source", "Unknown")
-            metadata = json.dumps(doc.metadata)
-            content = doc.page_content
+            metadata = json.dumps(doc.metadata).replace('\x00', '')
+            content = doc.page_content.replace('\x00', '')
             created_at = int(time.time())
             
             args_list.append((source, content, metadata, vector, created_at))
