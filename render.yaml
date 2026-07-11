@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: vedyam-backend
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    rootDir: backend
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: VEDYAM_SECRET
+        generateValue: true
+      - key: VEDYAM_TOKEN_TTL
+        value: "86400"
+      # Add your API keys manually in Render dashboard
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: HF_TOKEN
+        sync: false
+      # Supabase Postgres connection string - set manually in Render dashboard
+      - key: DATABASE_URL
+        sync: false
+      # Deployed Vercel website URL, for CORS - set manually in Render dashboard
+      - key: FRONTEND_URL
+        sync: false
