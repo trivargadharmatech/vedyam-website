@@ -525,17 +525,6 @@
       </div>
     </section>
 
-    <section class="block reveal">
-      <div class="container">
-        <div class="stats" id="statsStrip">
-          <div class="stat"><div class="n" data-count="50" data-suffix="+">0</div><div class="l">Lessons</div></div>
-          <div class="stat"><div class="n" data-count="12" data-suffix="">0</div><div class="l">Courses</div></div>
-          <div class="stat"><div class="n" data-count="1000" data-suffix="+">0</div><div class="l">Students</div></div>
-          <div class="stat"><div class="n" data-count="4" data-suffix=".8 ★">0</div><div class="l">Rating</div></div>
-        </div>
-      </div>
-    </section>
-
     <section class="block">
       <div class="container">
         <div class="head reveal">
@@ -862,10 +851,6 @@
   /* ─── After Home ─── */
   async function afterHome() {
     initPlaceholderAnimation();
-
-    // Stats counter observer
-    const statsEl = el('statsStrip');
-    if (statsEl) counterObserver.observe(statsEl);
 
     // Chatbot
     renderChat();
