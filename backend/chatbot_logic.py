@@ -213,22 +213,14 @@ class Chatbot:
             """
             self.domain_vector = None # Evaluated lazily to prevent startup crashes
 
-            # Build BM25 keyword index from PostgreSQL
-            from langchain_core.documents import Document
+            # BM25 keyword index — only built for local/FAISS mode.
+            # In production (DATABASE_URL set), pgvector handles all retrieval
+            # to avoid loading 100k+ docs into RAM on Render free tier.
             db_url = os.environ.get("DATABASE_URL")
             self.docs = []
-            if db_url:
-                import psycopg2
-                try:
-                    conn = psycopg2.connect(db_url)
-                    cur = conn.cursor()
-                    cur.execute("SELECT content, metadata FROM document_chunks")
-                    for row in cur.fetchall():
-                        self.docs.append(Document(page_content=row[0], metadata=row[1]))
-                    conn.close()
-                except Exception as e:
-                    logging.error(f"Failed to load docs from DB for BM25: {e}")
-            else:
+            self.bm25 = None
+            self._use_pg = bool(db_url)
+            if not db_url:
                 try:
                     from langchain_community.vectorstores import FAISS
                     vectorstore = FAISS.load_local(
@@ -239,14 +231,12 @@ class Chatbot:
                     self.docs = list(vectorstore.docstore._dict.values())
                     self.faiss_vs = vectorstore
                     logging.info("Loaded docs from FAISS vectorstore.")
+                    self.tokenized_docs = [doc.page_content.lower().split() for doc in self.docs]
+                    self.bm25 = BM25Okapi(self.tokenized_docs)
                 except Exception as e:
                     logging.error(f"Failed to load docs from FAISS: {e}")
-                    
-            if self.docs:
-                self.tokenized_docs = [doc.page_content.lower().split() for doc in self.docs]
-                self.bm25 = BM25Okapi(self.tokenized_docs)
             else:
-                self.bm25 = None
+                logging.info("Production mode: pgvector retrieval, BM25 skipped to save RAM.")
 
             # Cross-encoder wrapper using Inference API
             class RemoteCrossEncoder:
@@ -420,17 +410,20 @@ class Chatbot:
             return []
         try:
             import psycopg2
-            import json
             from langchain_core.documents import Document
-            pg_conn = psycopg2.connect(db_url)
+            pg_conn = psycopg2.connect(db_url, connect_timeout=10)
             pg_cur = pg_conn.cursor()
             q_emb = self.embeddings.embed_query(query_text)
+            # Format embedding as a PostgreSQL vector literal string
+            emb_str = '[' + ','.join(str(x) for x in q_emb) + ']'
             pg_cur.execute(
                 "SELECT content, metadata FROM document_chunks ORDER BY embedding <=> %s::vector LIMIT %s",
-                (q_emb, RETRIEVER_SEARCH_K)
+                (emb_str, RETRIEVER_SEARCH_K)
             )
             pg_results = pg_cur.fetchall()
+            pg_cur.close()
             pg_conn.close()
+            logging.info(f"pgvector retrieved {len(pg_results)} docs for query.")
             return [Document(page_content=row[0], metadata=row[1]) for row in pg_results]
         except Exception as e:
             logging.error(f"pgvector retrieval failed: {e}")
