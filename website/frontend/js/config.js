@@ -15,7 +15,7 @@ window.VEDYAM = {
   //                               (use this when the backend also serves the frontend)
   //   "http://127.0.0.1:8000"  -> backend running separately on your machine
   //   "https://api.vedyam.org" -> a deployed backend
-  API_BASE: isLocal ? "" : "https://vijayyh-vedyamchatbot1-0-0.hf.space",
+  API_BASE: "",
 
   // URL of the ShastraBot chatbot (simulator backend).
   // Used when redirecting users to the full chatbot experience.
