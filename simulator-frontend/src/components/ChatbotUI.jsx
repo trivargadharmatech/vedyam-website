@@ -4,7 +4,6 @@ import { Sun, Moon, Send, Compass, MessageSquare, RotateCcw, Plus, User, Menu, P
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SplashScreen from './SplashScreen';
 import tilakLogoImg from '../assets/tilak.png';
-import { getApiBase } from '../api';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import './ChatbotUI.css';
