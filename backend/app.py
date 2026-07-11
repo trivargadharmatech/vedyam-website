@@ -28,7 +28,7 @@ from chatbot import Chatbot as HFChatbot
 from explorer import KnowledgeExplorer
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": os.getenv("FRONTEND_URL", "*")}})
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 print("Initializing Simulator AI components...")
 try:
