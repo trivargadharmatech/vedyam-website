@@ -171,6 +171,9 @@ class PostgresWrapper:
     def __init__(self, conn):
         self.conn = conn
 
+    def cursor(self):
+        return self.conn.cursor()
+
     def execute(self, query, params=None):
         cur = self.conn.cursor()
         # Convert ? to %s for postgres
