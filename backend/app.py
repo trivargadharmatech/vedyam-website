@@ -32,14 +32,16 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 print("Initializing Simulator AI components...")
 try:
-    hf_chatbot = HFChatbot()
-    hf_explorer = KnowledgeExplorer(hf_chatbot)
-    
     if os.getenv("DATABASE_URL") and os.getenv("HF_TOKEN"):
+        print("Production mode: Using SimulatorChatbotLogic (Inference API).")
         sim_chatbot_logic = SimulatorChatbotLogic()
+        hf_chatbot = sim_chatbot_logic
+        hf_explorer = KnowledgeExplorer(sim_chatbot_logic)
     else:
         print("Local mode: Using HFChatbot for Simulator Logic.")
+        hf_chatbot = HFChatbot()
         sim_chatbot_logic = hf_chatbot
+        hf_explorer = KnowledgeExplorer(hf_chatbot)
         
     print("Simulator AI initialized successfully!")
 except Exception as e:
