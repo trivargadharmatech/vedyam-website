@@ -29,6 +29,95 @@
     return res.json();
   }
 
+  /* ─── Hardcoded Course Fallback ───
+     Shown only when the backend is offline / unreachable.
+     The moment a real backend responds with courses, these are ignored. */
+  const HARDCODED_COURSES = [
+    {
+      id: 'hc-1', title: 'Carnatic Classical Singing', category: 'Culture',
+      level: 'Beginner & Intermediate', summary: 'Individual mentoring · Open for all age groups',
+      description: 'Learn the foundations and finer techniques of Carnatic classical vocal music through one-on-one mentoring, progressing from beginner to intermediate levels at your own pace.',
+      lessons: ['Swara & Sruti fundamentals', 'Varnams', 'Geethams', 'Kritis — beginner ragas', 'Kritis — intermediate ragas', 'Manodharma basics'],
+      meta: { mode: 'Individual mentoring', age: 'All age groups' }
+    },
+    {
+      id: 'hc-2', title: 'Pattachitra Painting', category: 'Culture',
+      level: 'Beginner & Intermediate', summary: 'Group mentoring · Minimum age 9 years',
+      description: 'Explore the traditional Odia scroll-painting art form of Pattachitra in a group setting, covering natural pigments, motifs, and mythological storytelling through art.',
+      lessons: ['Materials & natural pigments', 'Line work & borders', 'Traditional motifs', 'Mythological compositions', 'Intermediate scroll work'],
+      meta: { mode: 'Group mentoring', age: 'Min age 9 years' }
+    },
+    {
+      id: 'hc-3', title: 'Drawing Class', category: 'Culture',
+      level: 'Basics to Advanced', summary: 'Comprehensive course including exam preparation',
+      description: 'A comprehensive drawing course covering everything from the basics to advanced technique, including structured preparation for elementary and intermediate drawing examinations.',
+      lessons: ['Basic strokes & shading', 'Geometrical & object drawing', 'Memory drawing', 'Nature drawing', 'Elementary exam prep', 'Intermediate exam prep'],
+      meta: { mode: '—', age: 'All age groups' }
+    },
+    {
+      id: 'hc-4', title: 'Kathak Dance', category: 'Culture',
+      level: 'Beginner', summary: 'Open for all age groups',
+      description: 'An introduction to Kathak, the classical dance form of North India, covering footwork, hand gestures, expressions, and foundational compositions.',
+      lessons: ['Basic stance & footwork (Tatkar)', 'Hastak & hand gestures', 'Chakkars', 'Simple compositions', 'Abhinaya basics'],
+      meta: { mode: '—', age: 'All age groups' }
+    },
+    {
+      id: 'hc-5', title: "Bharatiya Ganitam: Lilavati", category: 'Wisdom',
+      level: 'All levels', summary: "Mathematical concepts from Bhaskaracharya's Lilavati grantha",
+      description: "Part of the Bharatiya Ganitam series, this course teaches classical Indian mathematical concepts drawn directly from Bhaskaracharya's Lilavati grantha.",
+      lessons: ['Introduction to Lilavati', 'Number systems & operations', 'Arithmetic problems in verse', 'Geometry from Lilavati', 'Applied problem solving'],
+      meta: { mode: '—', age: '—' }
+    },
+    {
+      id: 'hc-6', title: 'Hindustani Classical Singing', category: 'Culture',
+      level: 'All levels', summary: 'Structured vocal training in the Hindustani tradition',
+      description: 'Structured training in Hindustani classical vocal music, covering ragas, taals, and the discipline of riyaz.',
+      lessons: ['Swara & alankar', 'Introduction to raga', 'Taal & laya', 'Khyal basics', 'Bandish practice'],
+      meta: { mode: '—', age: '—' }
+    },
+    {
+      id: 'hc-7', title: 'Bansuri Classes', category: 'Culture',
+      level: 'All levels', summary: 'Learn the Indian bamboo flute',
+      description: 'Learn to play the Bansuri, the traditional Indian bamboo flute, from basic breath control and fingering to melodic phrases.',
+      lessons: ['Holding & breath control', 'Basic fingering', 'Sur sadhana', 'Simple melodies', 'Raga-based phrases'],
+      meta: { mode: '—', age: '—' }
+    },
+    {
+      id: 'hc-8', title: 'Casio Classes', category: 'Culture',
+      level: 'All levels', summary: 'Keyboard (Casio) lessons for beginners onward',
+      description: 'Learn to play the keyboard (Casio), covering note reading, hand coordination, and playing popular and classical pieces.',
+      lessons: ['Keyboard basics & posture', 'Note reading', 'Scales & chords', 'Simple songs', 'Two-hand coordination'],
+      meta: { mode: '—', age: '—' }
+    },
+    {
+      id: 'hc-9', title: 'Samskrita Vedyam', category: 'Foundation',
+      level: 'Beginner', summary: 'Devanagari basics to speaking skills in Samskritam',
+      description: 'A structured journey into Sanskrit — beginning with the Devanagari script and building up to practical speaking skills in Samskritam.',
+      lessons: ['Devanagari script basics', 'Reading & writing practice', 'Basic vocabulary', 'Simple sentence construction', 'Conversational Samskritam'],
+      meta: { mode: '—', age: '—' }
+    }
+  ];
+
+  /* Try the live backend first; silently fall back to the hardcoded list
+     the instant the backend is unreachable or returns nothing. */
+  async function fetchCourses() {
+    try {
+      const data = await api('/api/courses');
+      if (data && Array.isArray(data.courses) && data.courses.length) return data.courses;
+      return HARDCODED_COURSES;
+    } catch (e) {
+      return HARDCODED_COURSES;
+    }
+  }
+
+  async function fetchCourseById(id) {
+    try {
+      const data = await api(`/api/course/${id}`);
+      if (data && data.course) return data.course;
+    } catch (e) { /* fall through to hardcoded */ }
+    return HARDCODED_COURSES.find(c => String(c.id) === String(id)) || null;
+  }
+
   function toast(msg, type = 'ok') {
     const c = el('toasts');
     const t = document.createElement('div');
@@ -783,8 +872,7 @@
 
     // Featured carousel
     try {
-      const data = await api('/api/courses');
-      const courses = data.courses || [];
+      const courses = await fetchCourses();
       const container = el('homeCarousel');
       if (!container) return;
 
@@ -812,8 +900,7 @@
   async function afterCourses() {
     const spinner = el('courseSpinner');
     try {
-      const data = await api('/api/courses');
-      allCourses = data.courses || [];
+      allCourses = await fetchCourses();
       if (spinner) spinner.remove();
 
       // Filters
@@ -859,8 +946,7 @@
   async function afterCourseDetail(courseId) {
     const wrap = el('detailWrap');
     try {
-      const data = await api(`/api/course/${courseId}`);
-      const c = data.course;
+      const c = await fetchCourseById(courseId);
       if (!c) { wrap.innerHTML = '<div class="notice"><h3>Course Not Found</h3></div>'; return; }
       const colorMap = { Foundation: 'indigo', Wisdom: 'amber', Mindset: 'sky', Practice: 'emerald', Purpose: 'rose', Culture: 'violet' };
       const col = colorMap[c.category] || c.accent || 'indigo';
@@ -1049,8 +1135,7 @@
     setButtonLoading(btn, true);
 
     try {
-      const chatApiBase = cfg.API_BASE;
-      const res = await fetch(chatApiBase + '/api/website/chat', {
+      const res = await fetch(cfg.API_BASE + '/api/website/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
