@@ -502,7 +502,7 @@
           <a href="${cfg.SIMULATOR_URL || '#/'}" class="btn ghost" target="_blank" rel="noopener"><span class="btn-label">Try Learning Mode ↗</span></a>
         </div>
         
-        <div class="quick-chat-bar stagger-up" style="animation-delay:0.6s; max-width:800px; margin: 40px auto 0; background:rgba(255, 255, 255, 0.03); border:1px solid rgba(255, 255, 255, 0.1); border-radius:12px; padding:16px; display:flex; align-items:center; gap:16px; box-shadow:0 8px 32px rgba(0, 0, 0, 0.2); backdrop-filter:blur(10px);">
+        <div class="quick-chat-bar stagger-up glass" style="animation-delay:0.6s; max-width:800px; margin: 40px auto 0; border-radius:12px; padding:16px; display:flex; align-items:center; gap:16px;">
           <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
             <div style="color:var(--gold);">
               <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
@@ -513,7 +513,7 @@
             </div>
           </div>
           <div style="flex:1; position:relative; display:flex; align-items:center;">
-            <input type="text" id="quickChatInput" placeholder="e.g., What is the true meaning of Dharma?" style="width:100%; background:rgba(255, 255, 255, 0.05); border:1px solid rgba(255, 255, 255, 0.1); border-radius:99px; padding:0.85rem 3.5rem 0.85rem 1.5rem; font-size:0.95rem; color:var(--ink); outline:none;" onkeydown="if(event.key==='Enter') window.__quickChat()">
+            <input type="text" id="quickChatInput" placeholder="e.g., What is the true meaning of Dharma?" style="width:100%; background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:99px; padding:0.85rem 3.5rem 0.85rem 1.5rem; font-size:0.95rem; color:var(--ink); outline:none;" onkeydown="if(event.key==='Enter') window.__quickChat()">
             <button onclick="window.__quickChat()" style="position:absolute; right:6px; background:var(--gold); border:none; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#000; transition: transform 0.2s ease;">
               <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
             </button>
@@ -873,7 +873,7 @@
       const colorMap = { Foundation: 'indigo', Wisdom: 'amber', Mindset: 'sky', Practice: 'emerald', Purpose: 'rose', Culture: 'violet' };
 
       container.innerHTML = `<div class="carousel-track">${courses.map(c => `
-        <div class="card" onclick="location.hash='#/course/${c.id}'" ${c.thumbnail ? `style="background-image: linear-gradient(to bottom, rgba(15,15,20,0.2) 0%, rgba(15,15,20,0.95) 100%), url('${c.thumbnail}'); background-size: cover; background-position: center;"` : ''}>
+        <div class="card" onclick="location.hash='#/course/${c.id}'" ${c.thumbnail ? `style="background-image: linear-gradient(to bottom, var(--overlay-top) 0%, var(--overlay-bot) 100%), url('${c.thumbnail}'); background-size: cover; background-position: center;"` : ''}>
           <div class="tag"><span class="d ${colorMap[c.category] || 'indigo'}"></span>${c.category}</div>
           <h3>${c.title}</h3>
           <p>${(c.summary || c.description || '').slice(0, 80)}…</p>
@@ -925,7 +925,7 @@
     }
     empty?.classList.add('hide');
     grid.innerHTML = courses.map(c => `
-      <div class="card reveal" onclick="location.hash='#/course/${c.id}'" ${c.thumbnail ? `style="background-image: linear-gradient(to bottom, rgba(15,15,20,0.2) 0%, rgba(15,15,20,0.95) 100%), url('${c.thumbnail}'); background-size: cover; background-position: center;"` : ''}>
+      <div class="card reveal" onclick="location.hash='#/course/${c.id}'" ${c.thumbnail ? `style="background-image: linear-gradient(to bottom, var(--overlay-top) 0%, var(--overlay-bot) 100%), url('${c.thumbnail}'); background-size: cover; background-position: center;"` : ''}>
         <div class="tag"><span class="d ${colorMap[c.category] || 'indigo'}"></span>${c.category}</div>
         <h3>${c.title}</h3>
         <p>${(c.summary || c.description || '').slice(0, 100)}…</p>

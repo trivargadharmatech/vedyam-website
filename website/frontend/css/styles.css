@@ -5,6 +5,8 @@
 
 /* ─── Design Tokens ─── */
 :root {
+  --overlay-top: rgba(15, 15, 20, 0.1);
+  --overlay-bot: rgba(15, 15, 20, 0.95);
   /* Background */
   --bg-color: #0b090a;
   --bg-gradient: radial-gradient(circle at top right, #2b1111, #0b090a 50%, #1a1025);
@@ -901,12 +903,14 @@ body.light-mode .global-decor-chakra { opacity: 0.08; }
    LIGHT MODE
    ═══════════════════════════════════════════════════════════ */
 body.light-mode {
-  --bg-color: #FAFAFA;
-  --bg-gradient: linear-gradient(180deg, #FFFFFF 0%, #FAFAF9 50%, #F3F4F6 100%);
-  --panel-bg: rgba(255, 255, 255, 0.85);
-  --panel-border: rgba(0, 0, 0, 0.06);
-  --ink: #111827;
-  --ink-2: #374151;
+  --overlay-top: rgba(255, 255, 255, 0.4);
+  --overlay-bot: rgba(255, 255, 255, 0.98);
+  --bg-color: #ffffff;
+  --bg-gradient: radial-gradient(circle at top right, #fff5eb, #ffffff 50%, #fcf8f2);
+  --panel-bg: rgba(255, 255, 255, 0.75);
+  --panel-border: rgba(230, 92, 0, 0.15);
+  --ink: #1a1a1a;
+  --ink-2: #4a4a4a;
   --ink-3: #6B7280;
   --line: rgba(0, 0, 0, 0.06);
   --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.03);
