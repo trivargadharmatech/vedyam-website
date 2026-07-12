@@ -873,8 +873,7 @@
       const colorMap = { Foundation: 'indigo', Wisdom: 'amber', Mindset: 'sky', Practice: 'emerald', Purpose: 'rose', Culture: 'violet' };
 
       container.innerHTML = `<div class="carousel-track">${courses.map(c => `
-        <div class="card" onclick="location.hash='#/course/${c.id}'">
-          ${c.thumbnail ? `<div style="aspect-ratio: 16/9; border-radius: var(--r); overflow: hidden; margin-bottom: 16px;"><img src="${c.thumbnail}" style="width: 100%; height: 100%; object-fit: cover;" alt="${c.title}"></div>` : ''}
+        <div class="card" onclick="location.hash='#/course/${c.id}'" ${c.thumbnail ? `style="background-image: linear-gradient(to bottom, rgba(15,15,20,0.2) 0%, rgba(15,15,20,0.95) 100%), url('${c.thumbnail}'); background-size: cover; background-position: center;"` : ''}>
           <div class="tag"><span class="d ${colorMap[c.category] || 'indigo'}"></span>${c.category}</div>
           <h3>${c.title}</h3>
           <p>${(c.summary || c.description || '').slice(0, 80)}…</p>
@@ -926,8 +925,7 @@
     }
     empty?.classList.add('hide');
     grid.innerHTML = courses.map(c => `
-      <div class="card reveal" onclick="location.hash='#/course/${c.id}'">
-        ${c.thumbnail ? `<div style="aspect-ratio: 16/9; border-radius: var(--r); overflow: hidden; margin-bottom: 16px;"><img src="${c.thumbnail}" style="width: 100%; height: 100%; object-fit: cover;" alt="${c.title}"></div>` : ''}
+      <div class="card reveal" onclick="location.hash='#/course/${c.id}'" ${c.thumbnail ? `style="background-image: linear-gradient(to bottom, rgba(15,15,20,0.2) 0%, rgba(15,15,20,0.95) 100%), url('${c.thumbnail}'); background-size: cover; background-position: center;"` : ''}>
         <div class="tag"><span class="d ${colorMap[c.category] || 'indigo'}"></span>${c.category}</div>
         <h3>${c.title}</h3>
         <p>${(c.summary || c.description || '').slice(0, 100)}…</p>
