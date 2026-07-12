@@ -534,10 +534,39 @@
       </div>
     </section>
 
-    <!-- Floating Chat Button -->
-    <button class="floating-chat-btn" onclick="window.__toggleChatWidget()" aria-label="Open Chat">
-      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-    </button>
+    <section class="block" id="inlineChatSection">
+      <div class="container">
+        <div class="head reveal">
+          <div><h2>Ask ShastraBot</h2><p>AI-powered Q&A grounded in scripture</p></div>
+        </div>
+        <!-- INLINE TEASER (Clicking anywhere opens the modal) -->
+        <div class="chat glass reveal-scale" style="position:relative; cursor:pointer;" onclick="window.__toggleChatWidget()">
+          <!-- Transparent overlay to intercept clicks -->
+          <div style="position:absolute; top:0; left:0; right:0; bottom:0; z-index:5;"></div>
+          
+          <div class="chat-head" style="justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span class="dot"></span>
+              <h4>ShastraBot</h4>
+            </div>
+            <div style="display:flex; align-items:center; gap:16px;">
+              <a href="${cfg.CHATBOT_URL || '#/'}?from=website" class="btn sm primary" style="position:relative; z-index:10;"><span class="btn-label">Open Full Chatbot ↗</span></a>
+            </div>
+          </div>
+          <div class="chat-body" style="pointer-events:none;">
+            <div class="chat-empty">
+              <p style="font-size:2rem; margin-bottom:8px">🙏</p>
+              <p>Ask anything about Hindu scriptures, philosophy, or history.</p>
+              <p style="color:var(--brand); margin-top:12px; font-weight:600;">Click to start chatting...</p>
+            </div>
+          </div>
+          <div class="chat-input" style="pointer-events:none;">
+            <input placeholder="Ask about the scriptures..." readonly>
+            <button class="btn primary"><span class="btn-label">Ask</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Chat Modal Overlay -->
     <div class="chat-widget-modal" id="chatWidgetModal">
@@ -772,10 +801,13 @@
       app.innerHTML = pageHome();
       afterHome();
       setTimeout(() => {
-        const chatBox = el('chatBox');
-        if (chatBox) {
-          const y = chatBox.getBoundingClientRect().top + window.scrollY - 100; // offset for sticky nav
+        const section = el('inlineChatSection');
+        if (section) {
+          const y = section.getBoundingClientRect().top + window.scrollY - 100;
           window.scrollTo({ top: y, behavior: 'smooth' });
+          setTimeout(() => {
+             window.__toggleChatWidget();
+          }, 600); // Wait for smooth scroll
         }
       }, 100);
     } else if (hash === '/courses') {
