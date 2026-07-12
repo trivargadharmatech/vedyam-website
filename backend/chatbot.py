@@ -231,11 +231,30 @@ class Chatbot:
             self.embeddings = HuggingFaceInferenceAPIEmbeddings(
                 api_key=hf_token, model_name=EMBEDDING_MODEL
             )
-            vectorstore = FAISS.load_local(
-                VECTORSTORE_DIR,
-                self.embeddings,
-                allow_dangerous_deserialization=True
+            
+            # MEMORY OPTIMIZATION FOR RENDER:
+            # We use mmap (memory mapping) to load the 318MB FAISS index from disk 
+            # instead of loading it entirely into Render's limited 512MB RAM.
+            import faiss
+            import pickle
+            import os
+            
+            index_path = os.path.join(VECTORSTORE_DIR, "index.faiss")
+            pkl_path = os.path.join(VECTORSTORE_DIR, "index.pkl")
+            
+            logging.info("Memory-mapping FAISS index...")
+            index = faiss.read_index(index_path, faiss.IO_FLAG_MMAP)
+            
+            with open(pkl_path, "rb") as f:
+                docstore, index_to_docstore_id = pickle.load(f)
+                
+            vectorstore = FAISS(
+                embedding_function=self.embeddings,
+                index=index,
+                docstore=docstore,
+                index_to_docstore_id=index_to_docstore_id
             )
+            logging.info("Vectorstore loaded via mmap successfully!")
 
             self.DOMAIN_CONCEPT = """
             Hindu scriptures, Bhagavad Gita, Mahabharata, Ramayana,
