@@ -1120,7 +1120,7 @@
     setButtonLoading(btn, true);
 
     try {
-      const res = await fetch(cfg.API_BASE + '/api/website/chat', {
+      const res = await fetch(cfg.API_BASE + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1129,7 +1129,7 @@
         }),
       });
       const data = await res.json();
-      state.chat.push({ role: 'bot', text: data.reply || 'No response received.' });
+      state.chat.push({ role: 'bot', text: data.response || 'No response received.' });
 
       const userQueries = state.chat.filter(m => m.role === 'user').length;
       if (!window.__continueChatInTab && userQueries >= 3) {
