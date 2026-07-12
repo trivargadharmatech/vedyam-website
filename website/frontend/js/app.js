@@ -1104,6 +1104,10 @@
   /* ═══════════════════════════════════════════════════════════════════
      CHATBOT
      ═══════════════════════════════════════════════════════════════════ */
+  function escapeHtml(unsafe) {
+    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
   function renderChat() {
     const body = el('chatBody');
     const empty = el('chatEmpty');
@@ -1113,7 +1117,18 @@
       return;
     }
     if (empty) empty.classList.add('hide');
-    body.innerHTML = state.chat.map(m => `<div class="bubble ${m.role}">${m.text}</div>`).join('');
+    body.innerHTML = state.chat.map((m, i) => {
+      const isBot = m.role === 'bot';
+      // Render markdown for bot messages
+      const contentHtml = (isBot && window.marked) ? window.marked.parse(m.text) : escapeHtml(m.text);
+      
+      const copyBtn = isBot ? `<button class="copy-btn" onclick="window.__copyMsg(${i})" title="Copy text" style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.1); border-radius:6px; padding:4px 6px; border:none; color:inherit; opacity:0.7; cursor:pointer; display:flex; align-items:center; transition:0.2s;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>` : '';
+
+      return `<div class="bubble ${m.role}" style="position:relative; padding-bottom:${isBot ? '34px' : '12px'};">
+                <div class="bubble-content markdown-body" style="font-size:0.95rem;">${contentHtml}</div>
+                ${copyBtn}
+              </div>`;
+    }).join('');
     body.scrollTop = body.scrollHeight;
   }
 
@@ -1179,6 +1194,17 @@
     const label = el('chatModeLabel');
     if (sw) { sw.classList.toggle('on', state.chatMode === 'teach'); sw.setAttribute('aria-checked', state.chatMode === 'teach'); }
     if (label) label.textContent = state.chatMode === 'teach' ? 'Teach Mode' : 'Learn Mode';
+  };
+
+  window.__copyMsg = (idx) => {
+    const msg = state.chat[idx];
+    if (msg && msg.text) {
+      navigator.clipboard.writeText(msg.text).then(() => {
+        toast('Copied to clipboard!');
+      }).catch(err => {
+        toast('Failed to copy', 'bad');
+      });
+    }
   };
 
   window.__filterCourses = () => {
