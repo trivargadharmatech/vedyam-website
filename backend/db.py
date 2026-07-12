@@ -166,6 +166,17 @@ def init_db():
     _seed(conn)
     conn.close()
 
+class _CursorResult:
+    """Proxies a psycopg2 cursor but allows a settable `lastrowid`,
+    since psycopg2's own `cursor.lastrowid` is a read-only built-in."""
+    def __init__(self, cur):
+        self._cur = cur
+        self.lastrowid = None
+
+    def __getattr__(self, name):
+        return getattr(self._cur, name)
+
+
 class PostgresWrapper:
     """A wrapper to make Postgres connection act like SQLite's `conn.execute()` for easy migration."""
     def __init__(self, conn):
@@ -179,22 +190,23 @@ class PostgresWrapper:
         # Convert ? to %s for postgres
         if '?' in query:
             query = query.replace('?', '%s')
-            
+
         is_insert = query.strip().upper().startswith("INSERT")
         if is_insert and "RETURNING" not in query.upper():
             query += " RETURNING id"
-            
+
         cur.execute(query, params or ())
-        
+
+        result = _CursorResult(cur)
         if is_insert:
             row = cur.fetchone()
             if row:
-                cur.lastrowid = row[0]
-                
-        return cur
-        
+                result.lastrowid = row[0]
+
+        return result
+
     def commit(self):
         self.conn.commit()
-        
+
     def close(self):
         self.conn.close()
