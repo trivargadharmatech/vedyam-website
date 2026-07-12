@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Sun, Moon, Send, Compass, MessageSquare, RotateCcw, Plus, User, Menu, PanelLeft, Copy, Check, Trash2, ArrowLeft } from 'lucide-react';
+import { Sun, Moon, Send, Compass, MessageSquare, RotateCcw, Plus, User, Menu, PanelLeft, Copy, Check, Trash2, ArrowLeft, ChevronDown, Mic } from 'lucide-react';
 import SplashScreen from './components/SplashScreen';
 import tilakLogoImg from './assets/tilak.png';
 import ReactMarkdown from 'react-markdown';
@@ -379,15 +379,12 @@ function App() {
         
         {/* Mobile Header */}
         <div className="mobile-header">
-          <button className="nav-btn" style={{ padding: '8px 12px', border: '1px solid var(--border-color)', borderRadius: '8px', fontSize: '0.85rem' }} onClick={() => window.location.href = '/'} title="Return to Website">
-            <ArrowLeft size={16} /> Return
-          </button>
           <button className="icon-btn" onClick={() => setSidebarOpen(true)}>
             <Menu size={24} />
           </button>
-          <div className="logo-container">
-            <img src={tilakLogoImg} id="mobile-target-logo" className="sidebar-logo" alt="Tilak" />
-            <h1>ShastraBot</h1>
+          <div className="logo-container" style={{ gap: '4px', cursor: 'pointer', justifyContent: 'center' }}>
+            <h1 style={{ fontSize: '1.1rem', fontWeight: 600 }}>ShastraBot</h1>
+            <ChevronDown size={16} style={{ color: 'var(--text-muted)' }} />
           </div>
           <button className="icon-btn" onClick={() => startNewChat()}>
             <Plus size={24} />
@@ -493,34 +490,18 @@ function App() {
                   <h2>Wisdom from Hindu Scriptures</h2>
                   <p>Explore the profound teachings of the Bhagavad Gita, Vedas, and Upanishads.</p>
                   
-                  <div className="suggestions-grid empty-cards">
-                    <button className="card-btn" onClick={() => setInputValue('What is the true meaning of Dharma?')}>
-                      <span className="card-icon">⚖️</span>
-                      <div className="card-text">
-                        <strong>Dharma</strong>
-                        <span>What is its true meaning?</span>
-                      </div>
+                  <div className="suggestions-list empty-cards">
+                    <button className="suggestion-pill" onClick={() => setInputValue('What is the true meaning of Dharma?')}>
+                      <span className="pill-icon">⚖️</span> What is the true meaning of Dharma?
                     </button>
-                    <button className="card-btn" onClick={() => setInputValue('Explain the concept of Karma step by step')}>
-                      <span className="card-icon">🔄</span>
-                      <div className="card-text">
-                        <strong>Karma</strong>
-                        <span>Explain the concept step by step</span>
-                      </div>
+                    <button className="suggestion-pill" onClick={() => setInputValue('Explain the concept of Karma')}>
+                      <span className="pill-icon">🔄</span> Explain the concept of Karma
                     </button>
-                    <button className="card-btn" onClick={() => setInputValue('Who is Lord Krishna in the Mahabharata?')}>
-                      <span className="card-icon">🦚</span>
-                      <div className="card-text">
-                        <strong>Lord Krishna</strong>
-                        <span>Who is He in the Mahabharata?</span>
-                      </div>
+                    <button className="suggestion-pill" onClick={() => setInputValue('Who is Lord Krishna?')}>
+                      <span className="pill-icon">🦚</span> Who is Lord Krishna?
                     </button>
-                    <button className="card-btn" onClick={() => setInputValue('What do the Upanishads teach about the soul (Atman)?')}>
-                      <span className="card-icon">✨</span>
-                      <div className="card-text">
-                        <strong>Atman</strong>
-                        <span>What do the Upanishads teach?</span>
-                      </div>
+                    <button className="suggestion-pill" onClick={() => setInputValue('Teachings of the Upanishads')}>
+                      <span className="pill-icon">✨</span> Teachings of the Upanishads
                     </button>
                   </div>
                 </div>
@@ -568,8 +549,11 @@ function App() {
 
               <div className="input-area-wrapper">
                 <div className="input-glass advanced-input">
+                  <button className="icon-btn plus-btn" title="More">
+                    <Plus size={22} />
+                  </button>
                   <textarea 
-                    placeholder="Ask about the scriptures..." 
+                    placeholder="Ask ShastraBot..." 
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={(e) => {
@@ -580,17 +564,21 @@ function App() {
                     }}
                     rows={1}
                   />
-                  <div className="input-actions">
-                    <span className="hint-text">Press Enter to send, Shift+Enter for new line</span>
+                  {inputValue.trim() ? (
                     <button 
-                      className={`send-btn ${inputValue.trim() ? 'active' : ''}`}
+                      className="icon-btn send-btn active"
                       onClick={handleChatSend}
-                      disabled={!inputValue.trim() || isChatLoading}
+                      disabled={isChatLoading}
                     >
-                      <Send size={18} />
+                      <Send size={18} color="#fff" />
                     </button>
-                  </div>
+                  ) : (
+                    <button className="icon-btn mic-btn" title="Voice Input">
+                      <Mic size={22} />
+                    </button>
+                  )}
                 </div>
+                <div className="hint-text desktop-only">Press Enter to send, Shift+Enter for new line</div>
               </div>
             </div>
           )}
