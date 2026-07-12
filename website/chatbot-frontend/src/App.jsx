@@ -74,6 +74,24 @@ function App() {
     if (window.innerWidth <= 768) {
       setSidebarOpen(false);
     }
+    
+    const params = new URLSearchParams(window.location.search);
+    const historyParam = params.get('history');
+    if (historyParam) {
+      try {
+        const parsed = JSON.parse(historyParam);
+        if (Array.isArray(parsed)) {
+          const mapped = parsed.map(m => ({
+            role: m.role,
+            content: m.text || m.content
+          }));
+          setMessages(mapped);
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      } catch (e) {
+        console.error("Failed to parse history", e);
+      }
+    }
   }, []);
 
   const toggleTheme = () => {

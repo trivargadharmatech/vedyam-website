@@ -582,11 +582,11 @@
               <span id="chatModeLabel">Learn Mode</span>
               <div class="switch ${state.chatMode === 'teach' ? 'on' : ''}" id="chatSwitch" role="switch" aria-checked="${state.chatMode === 'teach'}" tabindex="0"></div>
             </div>
-            <a href="${cfg.CHATBOT_URL || '#/'}?from=website" class="btn sm primary"><span class="btn-label">Open Full Chatbot ↗</span></a>
+            <button class="btn sm primary" onclick="window.__openFullChatbot()"><span class="btn-label">Open Full Chatbot ↗</span></button>
             <button class="btn ghost sm" onclick="window.__toggleChatWidget()" aria-label="Close Chat" style="padding:4px 8px; font-size:1.2rem; border-radius:50%; min-width:32px; min-height:32px; display:flex; align-items:center; justify-content:center;">✕</button>
           </div>
         </div>
-        <div class="chat-body" id="chatBody" style="flex:1;">
+        <div class="chat-body" id="chatBody" style="flex:1; max-height:none;">
           <div class="chat-empty" id="chatEmpty">
             <p style="font-size:2rem; margin-bottom:8px">🙏</p>
             <p>Ask anything about Hindu scriptures, philosophy, or history.</p>
@@ -1237,6 +1237,14 @@
       modal.classList.toggle('active');
       document.body.classList.toggle('chat-open', modal.classList.contains('active'));
     }
+  };
+
+  window.__openFullChatbot = () => {
+    let url = `${cfg.CHATBOT_URL || '#/'}?from=website`;
+    if (state.chat.length > 0) {
+      url += `&history=${encodeURIComponent(JSON.stringify(state.chat))}`;
+    }
+    window.location.href = url;
   };
 
   window.__copyMsg = (idx) => {
