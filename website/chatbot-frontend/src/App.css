@@ -71,10 +71,15 @@
 
 * { box-sizing: border-box; }
 
-body {
+html, body {
   margin: 0; font-family: var(--font-main);
   background-color: var(--bg-color); color: var(--text-color);
   overflow: hidden; /* Hide main scroll, handle scrolling internally */
+  height: 100dvh; width: 100vw;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+}
+body {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
@@ -110,7 +115,7 @@ body {
 @keyframes fadeOut { 0% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; display: none; } }
 
 /* App Container & Orbs */
-.app-container { height: 100vh; width: 100vw; display: flex; position: relative; }
+.app-container { height: 100%; width: 100%; display: flex; position: relative; }
 .bg-orb { position: absolute; border-radius: 50%; filter: blur(90px); z-index: -1; animation: float 25s infinite ease-in-out alternate; }
 .orb-1 { width: 55vw; height: 55vw; background: var(--orb-1); top: -15%; left: -10%; }
 .orb-2 { width: 45vw; height: 45vw; background: var(--orb-2); bottom: -15%; right: -10%; animation-delay: -7s; }
@@ -587,8 +592,17 @@ body {
   .sidebar { position: fixed; top: 0; left: -100%; width: 280px; transition: left 0.3s ease; }
   .sidebar.mobile-open { left: 0; }
   .sidebar.collapsed { width: 280px; } /* Override collapsed width on mobile */
-  .sidebar-overlay { display: block; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 90; }
+  .sidebar-overlay { display: block; position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(0,0,0,0.5); z-index: 90; }
   .suggestions-grid.empty-cards { grid-template-columns: 1fr; }
   .suggestions-grid { grid-template-columns: 1fr; }
-  .main-content { height: calc(100vh - 60px); }
+  .main-content { height: calc(100dvh - 60px); }
+  
+  .input-area-wrapper { padding: 0 !important; }
+  .advanced-input { 
+    border-radius: 0; 
+    border-left: none; border-right: none; border-bottom: none; 
+    padding: 10px 12px;
+  }
+  .advanced-input textarea, .advanced-input input { font-size: 16px; /* Prevents iOS auto-zoom */ }
+  .message-bubble { max-width: 92%; }
 }
