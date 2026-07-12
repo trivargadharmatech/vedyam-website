@@ -534,44 +534,47 @@
       </div>
     </section>
 
-    <section class="block">
-      <div class="container">
-        <div class="head reveal">
-          <div><h2>Ask ShastraBot</h2><p>AI-powered Q&A grounded in scripture</p></div>
+    <!-- Floating Chat Button -->
+    <button class="floating-chat-btn" onclick="window.__toggleChatWidget()" aria-label="Open Chat">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    </button>
+
+    <!-- Chat Modal Overlay -->
+    <div class="chat-widget-modal" id="chatWidgetModal">
+      <div class="chat-widget-backdrop" onclick="window.__toggleChatWidget()"></div>
+      <div class="chat glass chat-widget-content" id="chatBox">
+        <div class="chat-head" style="justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 12px 20px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span class="dot"></span>
+            <h4>ShastraBot</h4>
+          </div>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div class="teach-toggle" onclick="window.__toggleChatMode()">
+              <span id="chatModeLabel">Learn Mode</span>
+              <div class="switch ${state.chatMode === 'teach' ? 'on' : ''}" id="chatSwitch" role="switch" aria-checked="${state.chatMode === 'teach'}" tabindex="0"></div>
+            </div>
+            <a href="${cfg.CHATBOT_URL || '#/'}?from=website" class="btn sm primary"><span class="btn-label">Open Full Chatbot ↗</span></a>
+            <button class="btn ghost sm" onclick="window.__toggleChatWidget()" aria-label="Close Chat" style="padding:4px 8px; font-size:1.2rem; border-radius:50%; min-width:32px; min-height:32px; display:flex; align-items:center; justify-content:center;">✕</button>
+          </div>
         </div>
-        <div class="chat glass reveal-scale" id="chatBox">
-          <div class="chat-head" style="justify-content: space-between; flex-wrap: wrap; gap: 12px;">
-            <div style="display:flex; align-items:center; gap:12px;">
-              <span class="dot"></span>
-              <h4>ShastraBot</h4>
-            </div>
-            <div style="display:flex; align-items:center; gap:16px;">
-              <div class="teach-toggle" onclick="window.__toggleChatMode()">
-                <span id="chatModeLabel">Learn Mode</span>
-                <div class="switch ${state.chatMode === 'teach' ? 'on' : ''}" id="chatSwitch" role="switch" aria-checked="${state.chatMode === 'teach'}" tabindex="0"></div>
-              </div>
-              <a href="${cfg.CHATBOT_URL || '#/'}?from=website" class="btn sm primary"><span class="btn-label">Open Full Chatbot ↗</span></a>
-            </div>
+        <div class="chat-body" id="chatBody" style="flex:1;">
+          <div class="chat-empty" id="chatEmpty">
+            <p style="font-size:2rem; margin-bottom:8px">🙏</p>
+            <p>Ask anything about Hindu scriptures, philosophy, or history.</p>
           </div>
-          <div class="chat-body" id="chatBody">
-            <div class="chat-empty" id="chatEmpty">
-              <p style="font-size:2rem; margin-bottom:8px">🙏</p>
-              <p>Ask anything about Hindu scriptures, philosophy, or history.</p>
-            </div>
-          </div>
-          <div class="chips" id="chatChips">
-            <button class="chip" onclick="window.__askChat('What is Dharma?')">What is Dharma?</button>
-            <button class="chip" onclick="window.__askChat('Tell me about Karma')">Tell me about Karma</button>
-            <button class="chip" onclick="window.__askChat('Who is Lord Krishna?')">Who is Lord Krishna?</button>
-          </div>
-          <div class="chat-input">
-            <input id="chatInput" placeholder="Ask about the scriptures..." autocomplete="off"
-              onkeydown="if(event.key==='Enter')window.__sendChat()">
-            <button class="btn primary" id="chatSendBtn" onclick="window.__sendChat()" aria-label="Send message"><span class="btn-label">Ask</span><div class="btn-spinner"></div></button>
-          </div>
+        </div>
+        <div class="chips" id="chatChips">
+          <button class="chip" onclick="window.__askChat('What is Dharma?')">What is Dharma?</button>
+          <button class="chip" onclick="window.__askChat('Tell me about Karma')">Tell me about Karma</button>
+          <button class="chip" onclick="window.__askChat('Who is Lord Krishna?')">Who is Lord Krishna?</button>
+        </div>
+        <div class="chat-input" style="padding-bottom: max(16px, env(safe-area-inset-bottom));">
+          <input id="chatInput" placeholder="Ask about the scriptures..." autocomplete="off"
+            onkeydown="if(event.key==='Enter')window.__sendChat()">
+          <button class="btn primary" id="chatSendBtn" onclick="window.__sendChat()" aria-label="Send message"><span class="btn-label">Ask</span><div class="btn-spinner"></div></button>
         </div>
       </div>
-    </section>
+    </div>
     `;
   }
 
@@ -1124,8 +1127,8 @@
       
       const copyBtn = isBot ? `<button class="copy-btn" onclick="window.__copyMsg(${i})" title="Copy text" style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.1); border-radius:6px; padding:4px 6px; border:none; color:inherit; opacity:0.7; cursor:pointer; display:flex; align-items:center; transition:0.2s;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>` : '';
 
-      return `<div class="bubble ${m.role}" style="position:relative; padding-bottom:${isBot ? '34px' : '12px'};">
-                <div class="bubble-content markdown-body" style="font-size:0.95rem;">${contentHtml}</div>
+      return `<div class="bubble ${m.role}">
+                <div class="bubble-content markdown-body">${contentHtml}</div>
                 ${copyBtn}
               </div>`;
     }).join('');
@@ -1194,6 +1197,14 @@
     const label = el('chatModeLabel');
     if (sw) { sw.classList.toggle('on', state.chatMode === 'teach'); sw.setAttribute('aria-checked', state.chatMode === 'teach'); }
     if (label) label.textContent = state.chatMode === 'teach' ? 'Teach Mode' : 'Learn Mode';
+  };
+
+  window.__toggleChatWidget = () => {
+    const modal = el('chatWidgetModal');
+    if (modal) {
+      modal.classList.toggle('active');
+      document.body.classList.toggle('chat-open', modal.classList.contains('active'));
+    }
   };
 
   window.__copyMsg = (idx) => {
