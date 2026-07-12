@@ -119,7 +119,7 @@ function App() {
 
     try {
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const apiUrl = import.meta.env.VITE_API_URL || (isLocal ? '' : 'https://vedyam-backend.onrender.com');
+      const apiUrl = import.meta.env.VITE_API_URL || (isLocal ? '' : 'https://vijayyh-vedyamchatbot1-0-0.hf.space');
       const response = await fetch(`${apiUrl}/api/chat_stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -237,7 +237,7 @@ function App() {
 
     try {
       const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const apiUrl = import.meta.env.VITE_API_URL || (isLocal ? '' : 'https://vedyam-backend.onrender.com');
+      const apiUrl = import.meta.env.VITE_API_URL || (isLocal ? '' : 'https://vijayyh-vedyamchatbot1-0-0.hf.space');
       const response = await fetch(`${apiUrl}/api/explore_stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
