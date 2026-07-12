@@ -96,7 +96,8 @@ def course_json(r):
     return {
         "id": r["id"], "title": r["title"], "category": r["category"],
         "level": r["level"], "duration": r["duration"], "summary": r["summary"],
-        "description": r["description"], "lessons": json.loads(r["lessons"] or "[]"),
+        "description": r["description"],
+        "lessons": r["lessons"] if isinstance(r["lessons"], list) else json.loads(r["lessons"] or "[]"),
         "accent": r["accent"], "status": r["status"], "review_note": r["review_note"] or "",
         "instructor_id": r["instructor_id"],
         "instructor": r["instructor"] if "instructor" in r.keys() else None,
@@ -106,6 +107,13 @@ def course_json(r):
 # ==========================================
 # WEBSITE ROUTES (From server.py)
 # ==========================================
+
+# TEMPORARY: surface real tracebacks in the JSON response for diagnosis.
+# Remove this once the 500s on /api/courses and /api/auth/register are fixed.
+@app.errorhandler(Exception)
+def _debug_error_handler(e):
+    import traceback
+    return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 500
 
 @app.route("/api/health", methods=["GET"])
 def health():
