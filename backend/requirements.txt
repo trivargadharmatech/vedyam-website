@@ -10,3 +10,5 @@ gunicorn
 psycopg2-binary
 requests
 tenacity
+faiss-cpu
+sentence-transformers

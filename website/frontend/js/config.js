@@ -19,7 +19,7 @@ window.VEDYAM = {
 
   // URL of the ShastraBot chatbot (simulator backend).
   // Used when redirecting users to the full chatbot experience.
-  CHATBOT_URL: isLocal ? "http://localhost:5173/chatbot" : "/chatbot",
+  CHATBOT_URL: "/chatbot",
 
   // URL of the simulator frontend.
   // Used for "Try Learning Mode" and other simulator links.

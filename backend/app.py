@@ -32,16 +32,10 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 print("Initializing Simulator AI components...")
 try:
-    if os.getenv("DATABASE_URL"):
-        print("Production mode: Using SimulatorChatbotLogic (Inference API).")
-        sim_chatbot_logic = SimulatorChatbotLogic()
-        hf_chatbot = sim_chatbot_logic
-        hf_explorer = KnowledgeExplorer(sim_chatbot_logic)
-    else:
-        print("Local mode: Using HFChatbot for Simulator Logic.")
-        hf_chatbot = HFChatbot()
-        sim_chatbot_logic = hf_chatbot
-        hf_explorer = KnowledgeExplorer(hf_chatbot)
+    print("Using HFChatbot for Simulator Logic.")
+    hf_chatbot = HFChatbot()
+    sim_chatbot_logic = hf_chatbot
+    hf_explorer = KnowledgeExplorer(hf_chatbot)
         
     print("Simulator AI initialized successfully!")
 except Exception as e:
@@ -504,6 +498,7 @@ def simulator_media():
     return jsonify({"audios": audios, "videos": videos})
 
 @app.route("/api/simulator/chat_stream", methods=["POST"])
+@app.route("/api/chat_stream", methods=["POST"])
 def simulator_chat_stream():
     if not hf_chatbot:
         return jsonify({"error": "Simulator AI not initialized"}), 503
@@ -538,6 +533,7 @@ def simulator_chat_stream():
     return Response(event_generator(), mimetype="text/event-stream")
 
 @app.route("/api/simulator/chat", methods=["POST"])
+@app.route("/api/chat", methods=["POST"])
 def simulator_chat():
     if not hf_chatbot:
         return jsonify({"error": "Simulator AI not initialized"}), 503
@@ -594,7 +590,10 @@ def simulator_explore_stream():
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_website(path):
-    if path != "" and os.path.exists(os.path.join(FRONTEND_DIR, path)):
+    full_path = os.path.join(FRONTEND_DIR, path)
+    if path != "" and os.path.exists(full_path):
+        if os.path.isdir(full_path):
+            return send_from_directory(FRONTEND_DIR, path + "/index.html")
         return send_from_directory(FRONTEND_DIR, path)
     else:
         return send_from_directory(FRONTEND_DIR, "index.html")
