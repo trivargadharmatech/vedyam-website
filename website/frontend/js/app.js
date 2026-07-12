@@ -39,7 +39,7 @@
       description: 'Learn the foundations and finer techniques of Carnatic classical vocal music through one-on-one mentoring, progressing from beginner to intermediate levels at your own pace.',
       lessons: ['Swara & Sruti fundamentals', 'Varnams', 'Geethams', 'Kritis — beginner ragas', 'Kritis — intermediate ragas', 'Manodharma basics'],
       meta: { mode: 'Individual mentoring', age: 'All age groups' },
-      thumbnail: 'https://media1.tenor.com/m/v7Y5JbO0g0YAAAAd/classical-music.gif'
+      thumbnail: 'assets/images/courses/carnatic.png'
     },
     {
       id: 'hc-2', title: 'Pattachitra Painting', category: 'Culture',
@@ -79,7 +79,7 @@
       description: 'Structured training in Hindustani classical vocal music, covering ragas, taals, and the discipline of riyaz.',
       lessons: ['Swara & alankar', 'Introduction to raga', 'Taal & laya', 'Khyal basics', 'Bandish practice'],
       meta: { mode: '—', age: '—' },
-      thumbnail: 'https://media1.tenor.com/m/o6zYVdF4G78AAAAd/singing-classic.gif'
+      thumbnail: 'assets/images/courses/hindustani.png'
     },
     {
       id: 'hc-7', title: 'Bansuri Classes', category: 'Culture',
@@ -87,7 +87,7 @@
       description: 'Learn to play the Bansuri, the traditional Indian bamboo flute, from basic breath control and fingering to melodic phrases.',
       lessons: ['Holding & breath control', 'Basic fingering', 'Sur sadhana', 'Simple melodies', 'Raga-based phrases'],
       meta: { mode: '—', age: '—' },
-      thumbnail: 'https://media.tenor.com/B94cT1y6-2gAAAAi/3d-indian-man-plays-flute.gif'
+      thumbnail: 'assets/images/courses/bansuri.png'
     },
     {
       id: 'hc-8', title: 'Casio Classes', category: 'Culture',
@@ -874,7 +874,7 @@
 
       container.innerHTML = `<div class="carousel-track">${courses.map(c => `
         <div class="card" onclick="location.hash='#/course/${c.id}'">
-          ${c.thumbnail ? `<div style="height:140px; border-radius:var(--r) var(--r) 0 0; overflow:hidden; margin: -24px -24px 16px -24px;"><img src="${c.thumbnail}" style="width:100%; height:100%; object-fit:cover;" alt="${c.title}"></div>` : ''}
+          ${c.thumbnail ? `<div style="aspect-ratio: 16/9; border-radius: var(--r); overflow: hidden; margin-bottom: 16px;"><img src="${c.thumbnail}" style="width: 100%; height: 100%; object-fit: cover;" alt="${c.title}"></div>` : ''}
           <div class="tag"><span class="d ${colorMap[c.category] || 'indigo'}"></span>${c.category}</div>
           <h3>${c.title}</h3>
           <p>${(c.summary || c.description || '').slice(0, 80)}…</p>
@@ -927,7 +927,7 @@
     empty?.classList.add('hide');
     grid.innerHTML = courses.map(c => `
       <div class="card reveal" onclick="location.hash='#/course/${c.id}'">
-        ${c.thumbnail ? `<div style="height:140px; border-radius:var(--r) var(--r) 0 0; overflow:hidden; margin: -24px -24px 16px -24px;"><img src="${c.thumbnail}" style="width:100%; height:100%; object-fit:cover;" alt="${c.title}"></div>` : ''}
+        ${c.thumbnail ? `<div style="aspect-ratio: 16/9; border-radius: var(--r); overflow: hidden; margin-bottom: 16px;"><img src="${c.thumbnail}" style="width: 100%; height: 100%; object-fit: cover;" alt="${c.title}"></div>` : ''}
         <div class="tag"><span class="d ${colorMap[c.category] || 'indigo'}"></span>${c.category}</div>
         <h3>${c.title}</h3>
         <p>${(c.summary || c.description || '').slice(0, 100)}…</p>
