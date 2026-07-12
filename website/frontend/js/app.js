@@ -38,63 +38,72 @@
       level: 'Beginner & Intermediate', summary: 'Individual mentoring · Open for all age groups',
       description: 'Learn the foundations and finer techniques of Carnatic classical vocal music through one-on-one mentoring, progressing from beginner to intermediate levels at your own pace.',
       lessons: ['Swara & Sruti fundamentals', 'Varnams', 'Geethams', 'Kritis — beginner ragas', 'Kritis — intermediate ragas', 'Manodharma basics'],
-      meta: { mode: 'Individual mentoring', age: 'All age groups' }
+      meta: { mode: 'Individual mentoring', age: 'All age groups' },
+      thumbnail: 'https://media1.tenor.com/m/v7Y5JbO0g0YAAAAd/classical-music.gif'
     },
     {
       id: 'hc-2', title: 'Pattachitra Painting', category: 'Culture',
       level: 'Beginner & Intermediate', summary: 'Group mentoring · Minimum age 9 years',
       description: 'Explore the traditional Odia scroll-painting art form of Pattachitra in a group setting, covering natural pigments, motifs, and mythological storytelling through art.',
       lessons: ['Materials & natural pigments', 'Line work & borders', 'Traditional motifs', 'Mythological compositions', 'Intermediate scroll work'],
-      meta: { mode: 'Group mentoring', age: 'Min age 9 years' }
+      meta: { mode: 'Group mentoring', age: 'Min age 9 years' },
+      thumbnail: 'assets/images/courses/pattachitra.png'
     },
     {
       id: 'hc-3', title: 'Drawing Class', category: 'Culture',
       level: 'Basics to Advanced', summary: 'Comprehensive course including exam preparation',
       description: 'A comprehensive drawing course covering everything from the basics to advanced technique, including structured preparation for elementary and intermediate drawing examinations.',
       lessons: ['Basic strokes & shading', 'Geometrical & object drawing', 'Memory drawing', 'Nature drawing', 'Elementary exam prep', 'Intermediate exam prep'],
-      meta: { mode: '—', age: 'All age groups' }
+      meta: { mode: '—', age: 'All age groups' },
+      thumbnail: 'assets/images/courses/drawing.png'
     },
     {
       id: 'hc-4', title: 'Kathak Dance', category: 'Culture',
       level: 'Beginner', summary: 'Open for all age groups',
       description: 'An introduction to Kathak, the classical dance form of North India, covering footwork, hand gestures, expressions, and foundational compositions.',
       lessons: ['Basic stance & footwork (Tatkar)', 'Hastak & hand gestures', 'Chakkars', 'Simple compositions', 'Abhinaya basics'],
-      meta: { mode: '—', age: 'All age groups' }
+      meta: { mode: '—', age: 'All age groups' },
+      thumbnail: 'assets/images/courses/kathak.png'
     },
     {
       id: 'hc-5', title: "Bharatiya Ganitam: Lilavati", category: 'Wisdom',
       level: 'All levels', summary: "Mathematical concepts from Bhaskaracharya's Lilavati grantha",
       description: "Part of the Bharatiya Ganitam series, this course teaches classical Indian mathematical concepts drawn directly from Bhaskaracharya's Lilavati grantha.",
       lessons: ['Introduction to Lilavati', 'Number systems & operations', 'Arithmetic problems in verse', 'Geometry from Lilavati', 'Applied problem solving'],
-      meta: { mode: '—', age: '—' }
+      meta: { mode: '—', age: '—' },
+      thumbnail: 'assets/images/courses/ganitam.png'
     },
     {
       id: 'hc-6', title: 'Hindustani Classical Singing', category: 'Culture',
       level: 'All levels', summary: 'Structured vocal training in the Hindustani tradition',
       description: 'Structured training in Hindustani classical vocal music, covering ragas, taals, and the discipline of riyaz.',
       lessons: ['Swara & alankar', 'Introduction to raga', 'Taal & laya', 'Khyal basics', 'Bandish practice'],
-      meta: { mode: '—', age: '—' }
+      meta: { mode: '—', age: '—' },
+      thumbnail: 'https://media1.tenor.com/m/o6zYVdF4G78AAAAd/singing-classic.gif'
     },
     {
       id: 'hc-7', title: 'Bansuri Classes', category: 'Culture',
       level: 'All levels', summary: 'Learn the Indian bamboo flute',
       description: 'Learn to play the Bansuri, the traditional Indian bamboo flute, from basic breath control and fingering to melodic phrases.',
       lessons: ['Holding & breath control', 'Basic fingering', 'Sur sadhana', 'Simple melodies', 'Raga-based phrases'],
-      meta: { mode: '—', age: '—' }
+      meta: { mode: '—', age: '—' },
+      thumbnail: 'https://media.tenor.com/B94cT1y6-2gAAAAi/3d-indian-man-plays-flute.gif'
     },
     {
       id: 'hc-8', title: 'Casio Classes', category: 'Culture',
       level: 'All levels', summary: 'Keyboard (Casio) lessons for beginners onward',
       description: 'Learn to play the keyboard (Casio), covering note reading, hand coordination, and playing popular and classical pieces.',
       lessons: ['Keyboard basics & posture', 'Note reading', 'Scales & chords', 'Simple songs', 'Two-hand coordination'],
-      meta: { mode: '—', age: '—' }
+      meta: { mode: '—', age: '—' },
+      thumbnail: 'assets/images/courses/casio.png'
     },
     {
       id: 'hc-9', title: 'Samskrita Vedyam', category: 'Foundation',
       level: 'Beginner', summary: 'Devanagari basics to speaking skills in Samskritam',
       description: 'A structured journey into Sanskrit — beginning with the Devanagari script and building up to practical speaking skills in Samskritam.',
       lessons: ['Devanagari script basics', 'Reading & writing practice', 'Basic vocabulary', 'Simple sentence construction', 'Conversational Samskritam'],
-      meta: { mode: '—', age: '—' }
+      meta: { mode: '—', age: '—' },
+      thumbnail: 'assets/images/courses/samskrita.png'
     }
   ];
 
@@ -865,6 +874,7 @@
 
       container.innerHTML = `<div class="carousel-track">${courses.map(c => `
         <div class="card" onclick="location.hash='#/course/${c.id}'">
+          ${c.thumbnail ? `<div style="height:140px; border-radius:var(--r) var(--r) 0 0; overflow:hidden; margin: -24px -24px 16px -24px;"><img src="${c.thumbnail}" style="width:100%; height:100%; object-fit:cover;" alt="${c.title}"></div>` : ''}
           <div class="tag"><span class="d ${colorMap[c.category] || 'indigo'}"></span>${c.category}</div>
           <h3>${c.title}</h3>
           <p>${(c.summary || c.description || '').slice(0, 80)}…</p>
@@ -917,6 +927,7 @@
     empty?.classList.add('hide');
     grid.innerHTML = courses.map(c => `
       <div class="card reveal" onclick="location.hash='#/course/${c.id}'">
+        ${c.thumbnail ? `<div style="height:140px; border-radius:var(--r) var(--r) 0 0; overflow:hidden; margin: -24px -24px 16px -24px;"><img src="${c.thumbnail}" style="width:100%; height:100%; object-fit:cover;" alt="${c.title}"></div>` : ''}
         <div class="tag"><span class="d ${colorMap[c.category] || 'indigo'}"></span>${c.category}</div>
         <h3>${c.title}</h3>
         <p>${(c.summary || c.description || '').slice(0, 100)}…</p>
