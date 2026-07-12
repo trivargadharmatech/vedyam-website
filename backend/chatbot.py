@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from groq import Groq
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 from langchain_community.vectorstores import FAISS
 
 # Constants and Configuration
@@ -223,12 +223,13 @@ class Chatbot:
         """Initializes the Chatbot, loading models and vector store."""
         logging.info("Initializing Chatbot...")
         try:
-            import torch
-            device = "cuda" if torch.cuda.is_available() else "cpu"
-            logging.info(f"Using device for Chatbot embeddings: {device}")
-            self.embeddings = HuggingFaceEmbeddings(
-                model_name=EMBEDDING_MODEL,
-                model_kwargs={"device": device}
+            hf_token = os.getenv("HF_TOKEN")
+            if not hf_token:
+                raise ValueError("HF_TOKEN is not set in environment variables")
+            
+            logging.info("Using HuggingFaceInferenceAPIEmbeddings to save memory")
+            self.embeddings = HuggingFaceInferenceAPIEmbeddings(
+                api_key=hf_token, model_name=EMBEDDING_MODEL
             )
             vectorstore = FAISS.load_local(
                 VECTORSTORE_DIR,
