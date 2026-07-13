@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './SplashScreen.css';
-import tilakLogo from '../assets/tilak.png';
+import tilakLogo from '../assets/vedyam_logo.jpeg';
 
 const SplashScreen = ({ onComplete }) => {
   const [isExiting, setIsExiting] = useState(false);
@@ -63,7 +63,9 @@ const SplashScreen = ({ onComplete }) => {
       <div className="splash-content">
         <div className="logo-wrapper" id="flying-logo-wrapper">
           <div className="halo-glow"></div>
-          <img src={tilakLogo} alt="ISKCON Tilak" className="tilak-image" />
+          <div className="empty-state-icon" style={{ margin: '0 auto 24px', width: '120px', height: '120px' }}>
+            <img src={tilakLogo} alt="ISKCON Tilak" className="sidebar-logo" />
+          </div>
           
           <div className="particles-container">
             {particles.map((p) => (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Sun, Moon, Send, Compass, MessageSquare, RotateCcw, Plus, User, Menu, PanelLeft, Copy, Check, Trash2, ArrowLeft, ChevronDown, Mic } from 'lucide-react';
 import SplashScreen from './components/SplashScreen';
-import tilakLogoImg from './assets/tilak.png';
+import tilakLogoImg from './assets/vedyam_logo.jpeg';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import './App.css';
@@ -413,7 +413,7 @@ function App() {
         <aside className={`sidebar glass-panel ${!sidebarOpen ? 'collapsed' : ''} ${sidebarOpen ? 'mobile-open' : ''}`}>
           <div className="sidebar-header">
             <div className="logo-container">
-              <img src={tilakLogoImg} id="desktop-target-logo" className="sidebar-logo" alt="Tilak" />
+              <div className="sidebar-logo-wrapper"><img src={tilakLogoImg} id="desktop-target-logo" className="sidebar-logo" alt="Tilak" /></div>
               <h1>ShastraBot</h1>
             </div>
             <button className="icon-btn" onClick={() => setSidebarOpen(false)} title="Close Sidebar">
