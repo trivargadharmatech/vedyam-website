@@ -117,6 +117,7 @@ h1, h2, h3, h4 { color: var(--ink); font-weight: 600; line-height: 1.2; letter-s
   background: var(--panel-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
+  transform: translateZ(0);
   border: 1px solid var(--panel-border);
   box-shadow: var(--shadow-glass);
 }
@@ -209,6 +210,7 @@ h1, h2, h3, h4 { color: var(--ink); font-weight: 600; line-height: 1.2; letter-s
   position: sticky; top: 0; z-index: 50;
   background: var(--nav-bg);
   backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  transform: translateZ(0);
   border-bottom: 1px solid var(--line);
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
@@ -354,6 +356,8 @@ section.block { padding: var(--section-pad) 0; }
     radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 80%, rgba(var(--gold-rgb), 0.1) 0%, transparent 50%);
   animation: auroraMove 15s ease-in-out infinite alternate;
+  will-change: transform;
+  transform: translateZ(0);
 }
 @keyframes auroraMove {
   0% { transform: translate(0, 0) rotate(0deg) scale(1); }
@@ -376,6 +380,8 @@ section.block { padding: var(--section-pad) 0; }
     radial-gradient(2px 2px at 50% 10%, rgba(var(--gold-rgb), 0.3), transparent),
     radial-gradient(1px 1px at 30% 50%, rgba(139, 92, 246, 0.2), transparent);
   animation: particleDrift 20s ease-in-out infinite alternate;
+  will-change: transform;
+  transform: translateZ(0);
 }
 @keyframes particleDrift {
   0% { transform: translateY(0) translateX(0); }
@@ -394,6 +400,8 @@ section.block { padding: var(--section-pad) 0; }
   top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 900px; height: 900px;
   animation: spinChakraGlobal 60s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 @keyframes spinChakraGlobal {
@@ -445,6 +453,7 @@ body.light-mode .global-decor-chakra { opacity: 0.08; }
 .chat {
   position: relative; max-width: 760px; margin: 40px auto 0;
   background: var(--panel-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+  transform: translateZ(0);
   border: 1px solid var(--panel-border); border-radius: var(--r-lg);
   box-shadow: var(--shadow-lg); overflow: hidden; text-align: left;
 }

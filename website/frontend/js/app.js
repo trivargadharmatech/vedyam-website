@@ -260,10 +260,17 @@
   }
 
   /* ─── Combined Scroll Handler ─── */
+  let scrollTicking = false;
   window.addEventListener('scroll', () => {
-    updateScrollProgress();
-    updateBackToTop();
-    updateNavScroll();
+    if (!scrollTicking) {
+      window.requestAnimationFrame(() => {
+        updateScrollProgress();
+        updateBackToTop();
+        updateNavScroll();
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
   }, { passive: true });
 
   /* ─── Intersection Observer for Scroll Animations ─── */
