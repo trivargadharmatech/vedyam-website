@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Sun, Moon, Send, Compass, MessageSquare, RotateCcw, Plus, User, Menu, PanelLeft, Copy, Check, Trash2, ArrowLeft, ChevronDown, Mic } from 'lucide-react';
 import SplashScreen from './components/SplashScreen';
-import tilakLogoImg from './assets/vedyam_logo.jpeg';
+import tilakLogoImg from './assets/new_vedyam_logo.jpg';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import './App.css';

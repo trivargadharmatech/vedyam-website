@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './SplashScreen.css';
-import tilakLogo from '../assets/vedyam_logo.jpeg';
+import tilakLogo from '../assets/new_vedyam_logo.jpg';
 
 const SplashScreen = ({ onComplete }) => {
   const [isExiting, setIsExiting] = useState(false);
