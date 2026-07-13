@@ -71,7 +71,7 @@ function App() {
     setTheme(savedTheme);
     if (savedTheme === 'dark') document.body.classList.add('dark');
 
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 1024) {
       setSidebarOpen(false);
     }
     

@@ -579,16 +579,21 @@ body {
 .dot:nth-child(1) { animation-delay: -0.32s; } .dot:nth-child(2) { animation-delay: -0.16s; }
 @keyframes blink { 0%, 80%, 100% { transform: scale(0); opacity: 0.3; } 40% { transform: scale(1); opacity: 1; } }
 
-/* Responsive Mobile Layout */
-@media (max-width: 768px) {
-  .mobile-header { display: flex; justify-content: space-between; align-items: center; padding: 0 12px; }
+/* Responsive Tablet and Mobile Layout */
+@media (max-width: 1024px) {
+  .mobile-header { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; }
   .floating-sidebar-btn { display: none; }
   .sidebar { position: fixed; top: 0; left: -100%; width: 280px; transition: left 0.3s ease; }
   .sidebar.mobile-open { left: 0; }
   .sidebar.collapsed { width: 280px; } /* Override collapsed width on mobile */
   .sidebar-overlay { display: block; position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: rgba(0,0,0,0.5); z-index: 90; }
   .main-content { height: calc(100dvh - 60px); }
-  
+  .message-bubble { max-width: 85%; }
+  .desktop-only { display: none; }
+}
+
+@media (max-width: 768px) {
+  .mobile-header { padding: 0 12px; }
   .input-area-wrapper { padding: 10px 16px 16px 16px !important; }
   .advanced-input { 
     border-radius: 30px !important; 
@@ -597,5 +602,4 @@ body {
   }
   .advanced-input textarea, .advanced-input input { font-size: 16px; padding: 8px 0; }
   .message-bubble { max-width: 92%; }
-  .desktop-only { display: none; }
 }
