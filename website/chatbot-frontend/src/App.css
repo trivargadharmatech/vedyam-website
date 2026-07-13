@@ -243,15 +243,16 @@ body {
 
 /* Empty State / Dashboard Home */
 .empty-state {
-  flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
-  padding: 40px 20px; animation: fadeIn 0.5s ease;
+  flex: 1; display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
+  padding: max(40px, 8vh) 20px 20px; animation: fadeIn 0.5s ease;
   max-width: 900px; margin: 0 auto; width: 100%;
+  min-height: 0; overflow-y: auto;
 }
 .empty-state-icon {
-  font-size: 4rem; color: var(--primary-accent); line-height: 1; margin-bottom: 20px; opacity: 0.9;
+  font-size: 4rem; color: var(--primary-accent); line-height: 1; margin-bottom: 16px; opacity: 0.9;
 }
-.empty-state h2 { font-size: 1.8rem; font-weight: 500; margin: 0 0 12px; text-align: center; }
-.empty-state p { font-size: 1rem; color: var(--text-muted); margin: 0 0 40px; text-align: center; }
+.empty-state h2 { font-size: 1.8rem; font-weight: 500; margin: 0 0 8px; text-align: center; }
+.empty-state p { font-size: 1rem; color: var(--text-muted); margin: 0 0 30px; text-align: center; }
 
 .suggestions-list {
   display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 600px; margin-top: 20px;
