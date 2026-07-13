@@ -414,7 +414,7 @@ function App() {
           <div className="sidebar-header">
             <div className="logo-container">
               <div className="sidebar-logo-wrapper"><img src={tilakLogoImg} id="desktop-target-logo" className="sidebar-logo" alt="Tilak" /></div>
-              <h1 style={{ background: 'linear-gradient(135deg, #ffffff 0%, #b2e6e3 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontFamily: '"Cormorant Garamond", serif', fontSize: '1.8rem', letterSpacing: '0.05em' }}>Vedyam</h1>
+              <h1>ShastraBot</h1>
             </div>
             <button className="icon-btn" onClick={() => setSidebarOpen(false)} title="Close Sidebar">
               <PanelLeft size={20} />
