@@ -94,7 +94,7 @@ body {
 
 /* Intro Screen */
 .intro-screen {
-  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh;
   display: flex; justify-content: center; align-items: center;
   background-color: var(--bg-color); z-index: 9999;
   animation: fadeOut 0.8s ease 1.5s forwards;
@@ -231,7 +231,7 @@ body {
 
 /* Main Content Area */
 .main-content {
-  flex: 1; display: flex; flex-direction: column; height: 100vh; position: relative;
+  flex: 1; display: flex; flex-direction: column; height: 100%; position: relative;
   overflow: hidden;
 }
 
@@ -260,8 +260,15 @@ body {
   display: flex; align-items: center; gap: 16px; padding: 16px 20px;
   background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px;
   color: var(--text-color); font-size: 1rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); text-align: left;
-  will-change: transform, box-shadow;
+  will-change: transform, box-shadow, opacity;
+  opacity: 0;
+  animation: slideUpFade 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
+.suggestion-pill:nth-child(1) { animation-delay: 0.1s; }
+.suggestion-pill:nth-child(2) { animation-delay: 0.2s; }
+.suggestion-pill:nth-child(3) { animation-delay: 0.3s; }
+.suggestion-pill:nth-child(4) { animation-delay: 0.4s; }
+
 .suggestion-pill:hover { background: var(--input-bg); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
 .pill-icon { font-size: 1.2rem; display: flex; align-items: center; justify-content: center; background: rgba(128,128,128,0.1); padding: 8px; border-radius: 50%; }
 
