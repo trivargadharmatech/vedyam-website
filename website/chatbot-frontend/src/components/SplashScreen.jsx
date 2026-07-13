@@ -85,8 +85,8 @@ const SplashScreen = ({ onComplete }) => {
           </div>
         </div>
         
-        <h1 className="splash-title">
-          Hare Krishna
+        <h1 className="splash-title serif" style={{ background: 'linear-gradient(135deg, #ffffff 0%, #b2e6e3 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontFamily: '"Cormorant Garamond", serif' }}>
+          Vedyam
         </h1>
       </div>
     </div>
