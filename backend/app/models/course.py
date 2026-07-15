@@ -14,6 +14,7 @@ class Course(db.Model):
     description = db.Column(db.Text, nullable=True)
     lessons = db.Column(db.Text, nullable=True) # Stored as JSON string
     accent = db.Column(db.String(50), nullable=True)
+    thumbnail = db.Column(db.String(500), nullable=True)
     instructor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     status = db.Column(db.String(50), nullable=False, default='proposed')
     review_note = db.Column(db.Text, nullable=True)
@@ -41,6 +42,7 @@ class Course(db.Model):
             "description": self.description,
             "lessons": self.get_lessons(),
             "accent": self.accent,
+            "thumbnail": self.thumbnail,
             "status": self.status,
             "review_note": self.review_note or "",
             "instructor_id": self.instructor_id,
