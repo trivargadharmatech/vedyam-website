@@ -7,9 +7,16 @@
   const cfg = window.VEDYAM;
 
   /* ─── State ─── */
+  let cachedUser = null;
+  try {
+    cachedUser = JSON.parse(localStorage.getItem('user') || 'null');
+  } catch (e) {
+    localStorage.removeItem('user');
+  }
+
   const state = {
     token: localStorage.getItem('token'),
-    user: JSON.parse(localStorage.getItem('user') || 'null'),
+    user: cachedUser,
     theme: localStorage.getItem('theme') || 'dark',
     chat: [],
     chatMode: 'learn', // 'learn' or 'teach'
