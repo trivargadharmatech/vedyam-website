@@ -25,12 +25,7 @@ def create_app():
     from app import models
 
     # Register Blueprints
-    from app.routes.health import health_bp
-    from app.routes.auth import auth_bp
-    from app.routes.courses import courses_bp
-    from app.routes.user import user_bp
-    from app.routes.projects import projects_bp
-    from app.routes.chatbot_proxy import chatbot_bp
+    from app.routes import auth_bp, user_bp, courses_bp, projects_bp, health_bp, chatbot_bp
 
     app.register_blueprint(health_bp, url_prefix='/api')
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
