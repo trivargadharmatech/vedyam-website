@@ -11,6 +11,15 @@ import json
 
 payment_bp = Blueprint('payment', __name__)
 
+@payment_bp.route('/debug', methods=['GET'])
+def debug_keys():
+    import os
+    return jsonify({
+        "key_id": os.environ.get('RAZORPAY_KEY_ID', 'MISSING'),
+        "key_secret_len": len(os.environ.get('RAZORPAY_KEY_SECRET', '')),
+        "keys_in_env": [k for k in os.environ.keys() if 'RAZORPAY' in k.upper()]
+    })
+
 @payment_bp.route('/create-order', methods=['POST'])
 @jwt_required()
 def create_order():
