@@ -14,13 +14,6 @@ services:
         generateValue: true
       - key: VEDYAM_TOKEN_TTL
         value: "86400"
-      # Add your API keys manually in Render dashboard
-      - key: GROQ_API_KEY
-        sync: false
-      - key: GEMINI_API_KEY
-        sync: false
-      - key: HF_TOKEN
-        sync: false
       # Supabase Postgres connection string - set manually in Render dashboard
       - key: DATABASE_URL
         sync: false
