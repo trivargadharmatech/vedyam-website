@@ -20,15 +20,18 @@ def proxy_request(path):
     target_url = f"{Config.HF_CHATBOT_URL}/api{path}"
     
     try:
-        # We forward JSON payload as is
+        # Only forward safe headers
+        safe_headers = {'Content-Type': request.headers.get('Content-Type', 'application/json')}
+        
         resp = requests.request(
             method=request.method,
             url=target_url,
-            headers={key: value for (key, value) in request.headers if key != 'Host'},
+            headers=safe_headers,
             json=request.get_json(silent=True),
             stream=False,
             timeout=30
         )
+        
         # Exclude connection headers
         excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
         headers = [(name, value) for (name, value) in resp.raw.headers.items()
@@ -44,7 +47,8 @@ def proxy_chat():
 
 @chatbot_bp.route('/simulator/chat', methods=['POST', 'GET'])
 def proxy_simulator_chat():
-    return proxy_request('/simulator/chat')
+    # HF space doesn't have /simulator/chat, it only has /chat
+    return proxy_request('/chat')
 
 @chatbot_bp.route('/explain', methods=['POST', 'GET'])
 def proxy_explain():
@@ -75,13 +79,22 @@ def proxy_stream(path):
     target_url = f"{Config.HF_CHATBOT_URL}/api{path}"
     
     try:
+        safe_headers = {'Content-Type': request.headers.get('Content-Type', 'application/json')}
         req = requests.post(
             target_url,
+            headers=safe_headers,
             json=request.get_json(silent=True),
             stream=True,
             timeout=30
         )
-        return Response(stream_with_context(req.iter_content(chunk_size=1024)), content_type=req.headers.get('content-type'))
+        
+        def generate():
+            # Read in chunks of 1 byte to prevent any buffering delay
+            for chunk in req.iter_content(chunk_size=1):
+                if chunk:
+                    yield chunk
+                    
+        return Response(stream_with_context(generate()), content_type=req.headers.get('content-type', 'text/event-stream'))
     except Exception as e:
         return jsonify({"error": f"Failed to reach streaming service: {str(e)}"}), 503
 
@@ -91,7 +104,8 @@ def proxy_chat_stream():
     
 @chatbot_bp.route('/simulator/chat_stream', methods=['POST'])
 def proxy_simulator_chat_stream():
-    return proxy_stream('/simulator/chat_stream')
+    # HF space doesn't have /simulator/chat_stream, it only has /chat_stream
+    return proxy_stream('/chat_stream')
 
 @chatbot_bp.route('/explore_stream', methods=['POST'])
 def proxy_explore_stream():
