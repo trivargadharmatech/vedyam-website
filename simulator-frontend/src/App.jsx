@@ -4,6 +4,7 @@ import Dashboard from './components/Dashboard';
 import Layout from './components/Layout';
 import { Analytics, Community, Resources, Settings, Notifications } from './components/PlaceholderPages';
 import ChatbotUI from './components/ChatbotUI';
+import AdminDashboard from './components/AdminDashboard';
 
 function App() {
   const [user, setUser] = useState({ username: 'Guest', email: 'guest@example.com', name: 'Guest' });
@@ -21,6 +22,7 @@ function App() {
               <Route path="/resources" element={<Resources />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/notifications" element={<Notifications />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Layout>

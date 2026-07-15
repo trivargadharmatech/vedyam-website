@@ -15,6 +15,7 @@ import json
 import re
 import requests
 import time
+import os
 
 # --- Blueprints ---
 auth_bp = Blueprint('auth', __name__)
@@ -491,3 +492,120 @@ def update_me():
     
     db.session.commit()
     return jsonify({"user": user.to_json()})
+
+
+import random
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from app.models.otp import OTP
+
+def send_otp_email(to_email, otp_code):
+    sender_email = os.environ.get('EMAIL_HOST_USER')
+    sender_password = os.environ.get('EMAIL_HOST_PASSWORD')
+    
+    if not sender_email or not sender_password:
+        print(f'\n[MOCK EMAIL] To: {to_email} | OTP: {otp_code}\n')
+        return True
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = to_email
+    msg['Subject'] = 'Your Vedyam Login Verification Code'
+
+    body = f'Your Vedyam login verification code is: {otp_code}\n\nThis code will expire in 10 minutes.'
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        text = msg.as_string()
+        server.sendmail(sender_email, to_email, text)
+        server.quit()
+        return True
+    except Exception as e:
+        print(f'Error sending email: {e}')
+        return False
+
+@auth_bp.route('/request-otp', methods=['POST'])
+def request_otp():
+    data = request.json or {}
+    email = (data.get('email') or '').strip().lower()
+    
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+        
+    otp_code = str(random.randint(100000, 999999))
+    
+    otp_record = OTP(
+        email=email,
+        code=otp_code,
+        expires_at=int(time.time()) + 600
+    )
+    db.session.add(otp_record)
+    db.session.commit()
+    
+    success = send_otp_email(email, otp_code)
+    if success:
+        return jsonify({'message': 'OTP sent successfully'})
+    else:
+        return jsonify({'error': 'Failed to send OTP'}), 500
+
+@auth_bp.route('/verify-otp', methods=['POST'])
+def verify_otp():
+    data = request.json or {}
+    email = (data.get('email') or '').strip().lower()
+    code = data.get('code')
+    
+    if not email or not code:
+        return jsonify({'error': 'Email and code are required'}), 400
+        
+    otp_record = OTP.query.filter_by(email=email, code=code, used=False).order_by(OTP.id.desc()).first()
+    
+    if not otp_record or not otp_record.is_valid():
+        return jsonify({'error': 'Invalid or expired OTP'}), 400
+        
+    otp_record.used = True
+    
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        user = User(
+            name=email.split('@')[0],
+            email=email,
+            provider='google',
+            role='user'
+        )
+        db.session.add(user)
+    
+    db.session.commit()
+    
+    access_token = create_access_token(identity=user.id)
+    return jsonify({
+        'token': access_token,
+        'user': user.to_json()
+    })
+
+@user_bp.route('/admin/dashboard', methods=['GET'])
+@jwt_required()
+def admin_dashboard():
+    user_id = get_jwt_identity()
+    admin_user = db.session.get(User, user_id)
+    
+    if not admin_user or admin_user.role != 'instructor':
+        return jsonify({'error': 'Unauthorized'}), 403
+        
+    users = User.query.all()
+    enrollments = Enrollment.query.all()
+    
+    return jsonify({
+        'users': [u.to_json() for u in users],
+        'enrollments': [
+            {
+                'id': e.id,
+                'user_id': e.user_id,
+                'course_id': e.course_id,
+                'completed': e.completed
+            } for e in enrollments
+        ]
+    })
