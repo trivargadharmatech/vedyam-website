@@ -614,7 +614,7 @@ def admin_dashboard():
 
 
 
-@api.route('/admin/seed-courses', methods=['POST', 'GET'])
+@courses_bp.route('/admin/seed-courses', methods=['POST', 'GET'])
 def seed_courses():
     try:
         from app.models.course import Course
