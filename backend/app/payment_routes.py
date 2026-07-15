@@ -39,6 +39,9 @@ def create_order():
         amount_in_paise = 100 # Minimum ₹1 to test
 
     try:
+        if not payment_service.key_id:
+            return jsonify({"error": "Razorpay keys are missing from the server environment. Please configure RAZORPAY_KEY_ID in Render Dashboard."}), 500
+
         order = payment_service.create_order(
             amount=amount_in_paise,
             currency="INR",
