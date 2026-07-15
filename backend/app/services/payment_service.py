@@ -13,15 +13,25 @@ class PaymentProvider:
 
 class RazorpayProvider(PaymentProvider):
     def __init__(self):
-        self.key_id = os.environ.get('RAZORPAY_KEY_ID', '')
-        self.key_secret = os.environ.get('RAZORPAY_KEY_SECRET', '')
-        self.client = None
+        pass
+
+    @property
+    def key_id(self):
+        return os.environ.get('RAZORPAY_KEY_ID', '').strip()
+
+    @property
+    def key_secret(self):
+        return os.environ.get('RAZORPAY_KEY_SECRET', '').strip()
+
+    @property
+    def client(self):
         if self.key_id and self.key_secret:
-            self.client = razorpay.Client(auth=(self.key_id, self.key_secret))
+            return razorpay.Client(auth=(self.key_id, self.key_secret))
+        return None
 
     def create_order(self, amount, currency='INR', receipt=None, notes=None):
-        if not self.client:
-            # For development, allow fallback if no keys configured yet
+        client = self.client
+        if not client:
             return {"id": f"mock_order_{int(time.time())}", "amount": amount, "currency": currency}
             
         data = {
@@ -30,15 +40,15 @@ class RazorpayProvider(PaymentProvider):
             "receipt": receipt,
             "notes": notes or {}
         }
-        return self.client.order.create(data=data)
+        return client.order.create(data=data)
 
     def verify_payment(self, order_id, payment_id, signature):
-        if not self.client:
-            # Development mock fallback
+        client = self.client
+        if not client:
             return True
             
         try:
-            self.client.utility.verify_payment_signature({
+            client.utility.verify_payment_signature({
                 'razorpay_order_id': order_id,
                 'razorpay_payment_id': payment_id,
                 'razorpay_signature': signature
