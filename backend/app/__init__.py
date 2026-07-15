@@ -54,3 +54,6 @@ def create_app():
         return jsonify({"error": str(e)}), 500
 
     return app
+
+# Instantiate the app globally so Gunicorn's app:app command can find it in this package.
+app = create_app()
