@@ -32,7 +32,7 @@
     const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
     if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
     const res = await fetch(`${cfg.API_BASE}${path}`, { ...opts, headers });
-    if (res.status === 401) { logout(); throw new Error('Unauthorized'); }
+    if (res.status === 401 || res.status === 422) { logout(); throw new Error('Unauthorized'); }
     return res.json();
   }
 

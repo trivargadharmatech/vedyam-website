@@ -59,7 +59,7 @@ def register():
     db.session.add(new_user)
     db.session.commit()
     
-    access_token = create_access_token(identity=new_user.id)
+    access_token = create_access_token(identity=str(new_user.id))
     return jsonify({"token": access_token, "user": new_user.to_json()})
 
 @auth_bp.route('/login', methods=['POST'])
@@ -75,7 +75,7 @@ def login():
     user.last_login = int(time.time())
     db.session.commit()
     
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({"token": access_token, "user": user.to_json()})
 
 @auth_bp.route('/google', methods=['POST'])
@@ -97,7 +97,7 @@ def google_auth():
     user.last_login = int(time.time())
     db.session.commit()
     
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({"token": access_token, "user": user.to_json()})
 
 
@@ -580,7 +580,7 @@ def verify_otp():
     
     db.session.commit()
     
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({
         'token': access_token,
         'user': user.to_json()
