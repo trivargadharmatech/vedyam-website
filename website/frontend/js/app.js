@@ -1389,6 +1389,9 @@
         "description": "Course Enrollment",
         "image": "assets/decor/new_vedyam_logo.jpg",
         "order_id": orderData.order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "theme": {
+            "color": "#FF7D29" // Vedyam Primary Orange
+        },
         "handler": async function (response) {
             try {
                 // 3. Verify payment signature on backend
