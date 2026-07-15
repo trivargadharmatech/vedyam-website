@@ -17,11 +17,17 @@ class RazorpayProvider(PaymentProvider):
 
     @property
     def key_id(self):
-        return os.environ.get('RAZORPAY_KEY_ID', '').strip()
+        for k, v in os.environ.items():
+            if k.strip().upper() == 'RAZORPAY_KEY_ID':
+                return v.strip()
+        return "rzp_test_DUMMY_KEY_MISSING_IN_RENDER"
 
     @property
     def key_secret(self):
-        return os.environ.get('RAZORPAY_KEY_SECRET', '').strip()
+        for k, v in os.environ.items():
+            if k.strip().upper() == 'RAZORPAY_KEY_SECRET':
+                return v.strip()
+        return ""
 
     @property
     def client(self):
