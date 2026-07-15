@@ -7,6 +7,8 @@ class Enrollment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=False)
+    payment_id = db.Column(db.Integer, db.ForeignKey('payments.id'), nullable=True)
+    status = db.Column(db.String(50), nullable=False, default='active') # active, pending, etc.
     progress = db.Column(db.Integer, default=0)
     created_at = db.Column(db.Integer, default=lambda: int(time.time()))
     updated_at = db.Column(db.Integer, default=lambda: int(time.time()), onupdate=lambda: int(time.time()))
@@ -20,6 +22,8 @@ class Enrollment(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "course_id": self.course_id,
+            "payment_id": self.payment_id,
+            "status": self.status,
             "progress": self.progress,
             "created_at": self.created_at
         }

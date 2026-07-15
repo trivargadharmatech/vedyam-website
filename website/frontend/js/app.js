@@ -1368,14 +1368,78 @@
     const btn = el('enrollBtn');
     if (!state.user) { location.hash = '#/login'; return; }
     setButtonLoading(btn, true);
+    
     try {
-      await api(`/api/course/${courseId}/enroll`, { method: 'POST' });
-      toast('Successfully enrolled!');
-      route(); // Refresh
-    } catch {
-      toast('Enrollment failed', 'bad');
+      // 1. Create order on backend
+      const orderData = await api(`/api/payment/create-order`, { 
+        method: 'POST',
+        body: JSON.stringify({ course_id: courseId })
+      });
+      
+      if (!orderData || orderData.error) {
+        throw new Error(orderData?.error || 'Failed to create order');
+      }
+
+      // 2. Initialize Razorpay Checkout
+      const options = {
+        "key": orderData.key_id, // Enter the Key ID generated from the Dashboard
+        "amount": orderData.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": orderData.currency,
+        "name": "Vedyam",
+        "description": "Course Enrollment",
+        "image": "assets/decor/new_vedyam_logo.jpg",
+        "order_id": orderData.order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "handler": async function (response) {
+            try {
+                // 3. Verify payment signature on backend
+                const verifyData = await api(`/api/payment/verify`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_signature: response.razorpay_signature
+                    })
+                });
+                
+                if (verifyData.error) throw new Error(verifyData.error);
+                
+                toast('Successfully enrolled!');
+                location.hash = '#/profile'; // Redirect to profile to see My Courses
+                route();
+            } catch (err) {
+                console.error("Verification failed", err);
+                toast('Payment verification failed', 'bad');
+                setButtonLoading(btn, false);
+            }
+        },
+        "prefill": {
+            "name": state.user.name || "Learner",
+            "email": state.user.email || ""
+        },
+        "theme": {
+            "color": "#e07a5f" // match brand color
+        },
+        "modal": {
+            "ondismiss": function(){
+                setButtonLoading(btn, false);
+                toast('Payment cancelled', 'bad');
+            }
+        }
+      };
+      
+      const rzp1 = new window.Razorpay(options);
+      rzp1.on('payment.failed', function (response){
+          console.error(response.error);
+          toast(response.error.description || 'Payment failed', 'bad');
+          setButtonLoading(btn, false);
+      });
+      rzp1.open();
+      
+    } catch (err) {
+      console.error(err);
+      toast(err.message || 'Enrollment failed', 'bad');
+      setButtonLoading(btn, false);
     }
-    setButtonLoading(btn, false);
   };
 
   window.__setDiff = (el) => {

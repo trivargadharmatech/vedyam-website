@@ -26,6 +26,7 @@ def create_app():
 
     # Register Blueprints
     from app.routes import auth_bp, user_bp, courses_bp, projects_bp, health_bp, chatbot_bp
+    from app.routes.payment_routes import payment_bp
 
     app.register_blueprint(health_bp, url_prefix='/api')
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -33,6 +34,7 @@ def create_app():
     app.register_blueprint(user_bp, url_prefix='/api')
     app.register_blueprint(projects_bp, url_prefix='/api/projects')
     app.register_blueprint(chatbot_bp, url_prefix='/api')
+    app.register_blueprint(payment_bp, url_prefix='/api/payment')
 
     # Static file serving for the frontend
     @app.route("/", defaults={"path": ""})
