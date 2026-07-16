@@ -1108,3 +1108,76 @@ body.light-mode .toast {
   .btn::after { display: none; }
   .card::after { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE RESPONSIVENESS OVERRIDES (ADDED LATER)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Large Tablets and Laptops */
+@media (max-width: 1024px) {
+  .nav-inner { padding: 14px 20px; }
+  .hero { padding: 80px 0 40px; }
+  .hero h1.hero-title { font-size: 3.5rem; }
+  .hero-subtitle { font-size: 1.25rem; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Tablets and Phones */
+@media (max-width: 768px) {
+  /* Navigation */
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .nav-right { gap: 8px; }
+  .nav-right .btn.primary { display: none; } /* Usually hide primary CTA in nav on very small screens if space is tight, or keep it */
+  .logo { font-size: 1.2rem; gap: 8px; }
+  .logo .mark { width: 28px; height: 28px; font-size: 0.9rem; }
+  
+  /* Hero Section */
+  .hero { padding: 60px 0 30px; }
+  .hero h1.hero-title { font-size: 2.5rem; line-height: 1.1; margin-bottom: 16px; }
+  .hero-subtitle { font-size: 1.1rem; padding: 0 10px; margin-bottom: 30px; }
+  .hero-actions { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+  
+  /* Layout & Grids */
+  .section-pad { padding: 40px 0; }
+  .container { padding: 0 16px; }
+  .grid-3, .features-grid, .course-grid, .dashboard-grid { grid-template-columns: 1fr !important; gap: 20px; }
+  .row.wrap { flex-direction: column; align-items: stretch; gap: 16px; }
+  .row.wrap > * { width: 100%; text-align: center; justify-content: center; }
+  
+  /* Course Cards & Forms */
+  .course-filters { flex-direction: column; }
+  .course-filters input, .course-filters select { width: 100%; }
+  .card-img-wrap { height: 180px; }
+  
+  /* Modals */
+  .modal-content { width: 95%; padding: 24px 20px; margin: 20px auto; max-height: 90vh; overflow-y: auto; }
+  .auth-card { width: 95%; margin: 20px auto; padding: 30px 20px; }
+  
+  /* Form Inputs */
+  .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; font-size: 1rem; }
+  
+  /* Footer */
+  .footer { padding: 24px 0; }
+  .footer .fi { flex-direction: column; text-align: center; gap: 20px; }
+  
+  /* Typography */
+  h2, .section-title { font-size: 2rem; }
+  h3 { font-size: 1.5rem; }
+  
+  /* Specific views */
+  .course-detail-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .course-detail-header .btn { width: 100%; }
+  
+  /* Make all table wrappers horizontally scrollable if any exist */
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+  .hero h1.hero-title { font-size: 2rem; }
+  .chip-role { display: none; } /* hide role chip to save space */
+}
+

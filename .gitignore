@@ -28,3 +28,7 @@ node_modules/
 *.sqlite
 backend/vedyam-learning-pipeline.json
 dist/
+
+# Local testing and temporary scripts
+patches/
+test_scripts/
