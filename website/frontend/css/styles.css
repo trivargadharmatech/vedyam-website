@@ -1110,74 +1110,154 @@ body.light-mode .toast {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MOBILE RESPONSIVENESS OVERRIDES (ADDED LATER)
+   PREMIUM MOBILE-FIRST RESPONSIVENESS OVERRIDES
    ═══════════════════════════════════════════════════════════ */
 
-/* Large Tablets and Laptops */
+/* --- 1024px: Laptops / iPad Pro --- */
 @media (max-width: 1024px) {
-  .nav-inner { padding: 14px 20px; }
-  .hero { padding: 80px 0 40px; }
-  .hero h1.hero-title { font-size: 3.5rem; }
-  .hero-subtitle { font-size: 1.25rem; }
-  .grid-3 { grid-template-columns: repeat(2, 1fr); }
-  .features-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-inner { padding: 14px 24px; }
+  .hero { padding: 80px 0 60px; }
+  .hero-title { font-size: clamp(3rem, 5vw, 4rem); }
+  .hero-subtitle { font-size: 1.25rem; max-width: 80%; margin-inline: auto; }
+  
+  .grid-3 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .course-grid { grid-template-columns: repeat(2, 1fr); }
+  
+  .section-pad { padding: 80px 0; }
+  .container { padding: 0 24px; }
 }
 
-/* Tablets and Phones */
+/* --- 768px: Tablets / iPad --- */
 @media (max-width: 768px) {
   /* Navigation */
   .nav-links { display: none; }
   .hamburger { display: flex; }
-  .nav-right { gap: 8px; }
-  .nav-right .btn.primary { display: none; } /* Usually hide primary CTA in nav on very small screens if space is tight, or keep it */
-  .logo { font-size: 1.2rem; gap: 8px; }
-  .logo .mark { width: 28px; height: 28px; font-size: 0.9rem; }
+  .nav-right { gap: 12px; }
+  .nav-right .btn.primary { display: none; } /* Hide primary nav CTA to save space */
+  .logo { font-size: 1.25rem; gap: 8px; }
+  .logo .mark { width: 32px; height: 32px; font-size: 1rem; }
+  
+  /* Mobile Drawer Styling Update */
+  .mobile-drawer { width: 100%; right: -100%; border-left: none; }
   
   /* Hero Section */
-  .hero { padding: 60px 0 30px; }
-  .hero h1.hero-title { font-size: 2.5rem; line-height: 1.1; margin-bottom: 16px; }
-  .hero-subtitle { font-size: 1.1rem; padding: 0 10px; margin-bottom: 30px; }
-  .hero-actions { flex-direction: column; width: 100%; max-width: 300px; margin: 0 auto; }
-  .hero-actions .btn { width: 100%; justify-content: center; }
+  .hero { padding: 80px 0 40px; }
+  .hero-title { font-size: 3rem; line-height: 1.15; margin-bottom: 20px; }
+  .hero-subtitle { font-size: 1.15rem; max-width: 90%; }
   
   /* Layout & Grids */
-  .section-pad { padding: 40px 0; }
-  .container { padding: 0 16px; }
-  .grid-3, .features-grid, .course-grid, .dashboard-grid { grid-template-columns: 1fr !important; gap: 20px; }
-  .row.wrap { flex-direction: column; align-items: stretch; gap: 16px; }
-  .row.wrap > * { width: 100%; text-align: center; justify-content: center; }
+  .section-pad { padding: 60px 0; }
+  .grid-3, .features-grid, .course-grid, .dashboard-grid { 
+    grid-template-columns: 1fr !important; 
+    gap: 24px; 
+  }
   
-  /* Course Cards & Forms */
-  .course-filters { flex-direction: column; }
-  .course-filters input, .course-filters select { width: 100%; }
-  .card-img-wrap { height: 180px; }
+  .row.wrap { flex-direction: column; align-items: stretch; gap: 24px; }
+  .row.wrap > div { width: 100%; }
+  .about-content, .about-img { text-align: center; }
   
-  /* Modals */
-  .modal-content { width: 95%; padding: 24px 20px; margin: 20px auto; max-height: 90vh; overflow-y: auto; }
-  .auth-card { width: 95%; margin: 20px auto; padding: 30px 20px; }
-  
-  /* Form Inputs */
-  .form-group input, .form-group select, .form-group textarea { padding: 12px 14px; font-size: 1rem; }
+  /* Forms & Modals */
+  .course-filters { flex-direction: column; gap: 12px; }
+  .course-filters input, .course-filters select { width: 100%; padding: 14px; }
+  .modal-content { width: 92%; max-width: none; padding: 32px 24px; border-radius: 20px; }
   
   /* Footer */
-  .footer { padding: 24px 0; }
-  .footer .fi { flex-direction: column; text-align: center; gap: 20px; }
-  
-  /* Typography */
-  h2, .section-title { font-size: 2rem; }
-  h3 { font-size: 1.5rem; }
-  
-  /* Specific views */
-  .course-detail-header { flex-direction: column; align-items: flex-start; gap: 20px; }
-  .course-detail-header .btn { width: 100%; }
-  
-  /* Make all table wrappers horizontally scrollable if any exist */
-  table { display: block; overflow-x: auto; white-space: nowrap; }
+  .footer { padding: 40px 0 30px; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: 20px; }
 }
 
-/* Small Phones */
+/* --- 480px: Large Phones --- */
 @media (max-width: 480px) {
-  .hero h1.hero-title { font-size: 2rem; }
-  .chip-role { display: none; } /* hide role chip to save space */
+  /* Navigation */
+  .nav-inner { padding: 12px 16px; }
+  .chip-role { display: none; } /* Reclaim space */
+  .avatar { width: 36px; height: 36px; }
+  
+  /* Hero */
+  .hero { padding: 60px 0 30px; }
+  .hero-title { font-size: 2.5rem; }
+  .hero-subtitle { font-size: 1.05rem; padding: 0 10px; margin-bottom: 32px; max-width: 100%; }
+  .hero-actions { 
+    flex-direction: column; 
+    width: 100%; 
+    padding: 0 16px; 
+    gap: 16px;
+  }
+  .hero-actions .btn { 
+    width: 100%; 
+    justify-content: center; 
+    min-height: 48px; /* Apple HIG standard */
+    font-size: 1.05rem;
+  }
+  
+  /* Typography */
+  h2, .section-title { font-size: 2rem; line-height: 1.2; margin-bottom: 24px; }
+  h3 { font-size: 1.5rem; }
+  p { font-size: 1rem; line-height: 1.6; }
+  
+  /* Sections */
+  .section-pad { padding: 48px 0; }
+  .container { padding: 0 16px; }
+  
+  /* Cards */
+  .card { border-radius: 16px; }
+  .card-img-wrap { height: 200px; border-radius: 12px; margin: 12px 12px 0; }
+  .card-body { padding: 20px; }
+  .card-title { font-size: 1.25rem; }
+  
+  /* Form Inputs (Full width, easy tap) */
+  .form-group input, 
+  .form-group select, 
+  .form-group textarea { 
+    padding: 14px 16px; 
+    font-size: 16px; /* Prevents iOS auto-zoom */
+    border-radius: 12px;
+  }
+  
+  /* Specific Views */
+  .course-detail-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .course-detail-header .btn { width: 100%; }
+  
+  /* Footer */
+  .footer .fi { flex-direction: column; text-align: center; gap: 24px; }
+}
+
+/* --- 414px: iPhone Pro Max / Plus sizes --- */
+@media (max-width: 414px) {
+  .hero-title { font-size: 2.25rem; }
+  .card-img-wrap { height: 180px; }
+  .modal-content { padding: 24px 16px; }
+}
+
+/* --- 390px: Standard iPhones (12/13/14) --- */
+@media (max-width: 390px) {
+  .hero-title { font-size: 2.15rem; }
+  .section-pad { padding: 40px 0; }
+  .nav-inner { padding: 10px 14px; }
+}
+
+/* --- 375px: Older iPhones (X/11/SE) --- */
+@media (max-width: 375px) {
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  h2, .section-title { font-size: 1.75rem; }
+  .card-body { padding: 16px; }
+}
+
+/* --- 360px: Standard Androids --- */
+@media (max-width: 360px) {
+  .hero-title { font-size: 1.85rem; }
+  .container { padding: 0 12px; }
+  .card-img-wrap { height: 160px; }
+}
+
+/* --- 320px: Smallest Supported Devices --- */
+@media (max-width: 320px) {
+  .hero-title { font-size: 1.65rem; }
+  h2, .section-title { font-size: 1.5rem; }
+  .nav-right .btn.sm { padding: 6px 10px; font-size: 0.8rem; }
+  .hero-actions .btn { font-size: 0.95rem; min-height: 44px; }
+  .card-body p { font-size: 0.9rem; }
 }
 
