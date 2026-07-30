@@ -111,6 +111,14 @@
       lessons: ['Devanagari script basics', 'Reading & writing practice', 'Basic vocabulary', 'Simple sentence construction', 'Conversational Samskritam'],
       meta: { mode: '—', age: '—' },
       thumbnail: 'assets/images/courses/samskrita.png'
+    },
+    {
+      id: 'hc-10', title: 'Hindi Bhasha Vikas', category: 'Foundation',
+      level: 'Beginner', summary: 'Devanagari basics to fluent Hindi reading, writing & speaking',
+      description: 'A structured journey into Hindi — beginning with Devanagari script fundamentals and building up to confident reading, writing, and conversational fluency.',
+      lessons: ['Devanagari script basics', 'Reading & writing practice', 'Basic vocabulary & grammar', 'Sentence construction', 'Conversational Hindi'],
+      meta: { mode: '—', age: '—' },
+      thumbnail: 'assets/images/courses/hindi-bhasha-vikas.png'
     }
   ];
 
