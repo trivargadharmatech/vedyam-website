@@ -622,10 +622,6 @@ def seed_courses():
         from app import db
         import json
         
-        # Check if we already have more than 1 course to avoid duplicates
-        if Course.query.count() > 2:
-            return jsonify({'message': 'Courses already seeded!'})
-            
         instructor = User.query.filter_by(role='instructor').first()
         if not instructor:
             instructor_id = 1
@@ -640,7 +636,8 @@ def seed_courses():
             {'title': 'Bharatiya Ganitam: Lilavati', 'category': 'Wisdom', 'level': 'All levels', 'duration': 'Flexible', 'summary': 'Mathematical concepts from Bhaskaracharya Lilavati grantha', 'description': 'Part of the Bharatiya Ganitam series, this course teaches classical Indian mathematical concepts drawn directly from Bhaskaracharya Lilavati grantha.', 'lessons': ['Introduction to Lilavati', 'Number systems & operations', 'Arithmetic problems in verse', 'Geometry from Lilavati', 'Applied problem solving'], 'thumbnail': 'assets/images/courses/ganitam.png'},
             {'title': 'Hindustani Classical Singing', 'category': 'Culture', 'level': 'All levels', 'duration': 'Flexible', 'summary': 'Structured vocal training in the Hindustani tradition', 'description': 'Structured training in Hindustani classical vocal music, covering ragas, taals, and the discipline of riyaz.', 'lessons': ['Swara & alankar', 'Introduction to raga', 'Taal & laya', 'Khyal basics', 'Bandish practice'], 'thumbnail': 'assets/images/courses/hindustani.png'},
             {'title': 'Bansuri Classes', 'category': 'Culture', 'level': 'All levels', 'duration': 'Flexible', 'summary': 'Learn the Indian bamboo flute', 'description': 'Learn to play the Bansuri, the traditional Indian bamboo flute, from basic breath control and fingering to melodic phrases.', 'lessons': ['Holding & breath control', 'Basic fingering', 'Sur sadhana', 'Simple melodies', 'Raga-based phrases'], 'thumbnail': 'assets/images/courses/bansuri.png'},
-            {'title': 'Casio Classes', 'category': 'Culture', 'level': 'All levels', 'duration': 'Flexible', 'summary': 'Keyboard (Casio) lessons for beginners onward', 'description': 'Learn to play the keyboard (Casio), covering note reading, hand coordination, and playing popular and classical pieces.', 'lessons': ['Keyboard basics & posture', 'Note reading', 'Scales & chords', 'Simple songs', 'Two-hand coordination'], 'thumbnail': 'assets/images/courses/casio.png'}
+            {'title': 'Casio Classes', 'category': 'Culture', 'level': 'All levels', 'duration': 'Flexible', 'summary': 'Keyboard (Casio) lessons for beginners onward', 'description': 'Learn to play the keyboard (Casio), covering note reading, hand coordination, and playing popular and classical pieces.', 'lessons': ['Keyboard basics & posture', 'Note reading', 'Scales & chords', 'Simple songs', 'Two-hand coordination'], 'thumbnail': 'assets/images/courses/casio.png'},
+            {'title': 'Hindi Bhasha Vikas', 'category': 'Foundation', 'level': 'Beginner', 'duration': 'Flexible', 'summary': 'Devanagari basics to fluent Hindi reading, writing & speaking', 'description': 'A structured journey into Hindi — beginning with Devanagari script fundamentals and building up to confident reading, writing, and conversational fluency.', 'lessons': ['Devanagari script basics', 'Reading & writing practice', 'Basic vocabulary & grammar', 'Sentence construction', 'Conversational Hindi'], 'thumbnail': 'assets/images/courses/hindi-bhasha-vikas.png'}
         ]
         
         added = 0
